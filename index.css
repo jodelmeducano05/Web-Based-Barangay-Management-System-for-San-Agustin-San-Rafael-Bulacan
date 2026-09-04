@@ -1,4 +1,23 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/** @type {import('tailwindcss').Config} */
+export default {
+  darkMode: ["class"],
+  content: [
+    "./index.html",
+    "./*.jsx",
+    "./**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        border: "hsl(var(--border))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+      },
+      borderColor: {
+        border: "hsl(var(--border))",
+      }
+    },
+  },
+  plugins: [],
+}
 
