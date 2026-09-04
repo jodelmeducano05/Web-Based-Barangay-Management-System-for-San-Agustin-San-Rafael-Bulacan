@@ -1,86 +1,59 @@
-import { Toaster } from "@/components/ui/toaster"
-import { QueryClientProvider } from '@tanstack/react-query'
-import { queryClientInstance } from '@/lib/query-client'
-import { BrowserRouter as Router, Route, Routes, Navigate, Outlet } from 'react-router-dom';
-import PageNotFound from './lib/PageNotFound';
-import { AuthProvider, useAuth } from '@/lib/AuthContext';
-import UserNotRegisteredError from '@/components/UserNotRegisteredError';
-import ScrollToTop from './components/ScrollToTop';
-import ProtectedRoute from '@/components/ProtectedRoute';
-import Layout from '@/components/Layout';
-import Login from '@/pages/Login';
-import Register from '@/pages/Register';
-import ForgotPassword from '@/pages/ForgotPassword';
-import ResetPassword from '@/pages/ResetPassword';
-import Dashboard from '@/pages/Dashboard';
-import Residents from '@/pages/Residents';
-import Certificates from '@/pages/Certificates';
-import Blotter from '@/pages/Blotter';
-import Officials from '@/pages/Officials';
-import Announcements from '@/pages/Announcements';
-
-const AuthenticatedApp = () => {
-  const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
-
-  // Show loading spinner while checking app public settings or auth
-  if (isLoadingPublicSettings || isLoadingAuth) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
-      </div>
-    );
-  }
-
-  // Handle authentication errors
-  if (authError) {
-    if (authError.type === 'user_not_registered') {
-      return <UserNotRegisteredError />;
-    } else if (authError.type === 'auth_required') {
-      // Redirect to login automatically
-      navigateToLogin();
-      return null;
-    }
-  }
-
-  // Render the main app
-  return <Outlet />;
-};
-
+import React, { useState } from 'react'
 
 function App() {
+  const [page, setPage] = useState('dashboard')
 
   return (
-    <AuthProvider>
-      <QueryClientProvider client={queryClientInstance}>
-        <Router>
-          <ScrollToTop />
-          <Routes>
-            {/* Public auth routes */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
+    <div className="min-h-screen bg-background text-foreground flex">
+      {/* SIDEBAR */}
+      <div className="w-64 bg-white border-r p-4 shadow-sm">
+        <h2 className="text-xl font-bold mb-6 text-green-700">Brgy. San Agustin</h2>
+        <div className="space-y-2">
+          <button onClick={() => setPage('dashboard')} className={`w-full text-left p-3 rounded ${page === 'dashboard' ? 'bg-green-600 text-white' : 'hover:bg-gray-100'}`}>🏠 Dashboard</button>
+          <button onClick={() => setPage('blotter')} className={`w-full text-left p-3 rounded ${page === 'blotter' ? 'bg-green-600 text-white' : 'hover:bg-gray-100'}`}>📝 Blotter</button>
+          <button onClick={() => setPage('certificate')} className={`w-full text-left p-3 rounded ${page === 'certificate' ? 'bg-green-600 text-white' : 'hover:bg-gray-100'}`}>📄 Certificate</button>
+          <button onClick={() => setPage('residents')} className={`w-full text-left p-3 rounded ${page === 'residents' ? 'bg-green-600 text-white' : 'hover:bg-gray-100'}`}>👥 Residents</button>
+        </div>
+      </div>
 
-            {/* Authenticated app routes */}
-            <Route element={<AuthenticatedApp />}>
-              <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
-                <Route element={<Layout />}>
-                  <Route path="/" element={<Dashboard />} />
-                  <Route path="/residents" element={<Residents />} />
-                  <Route path="/certificates" element={<Certificates />} />
-                  <Route path="/blotter" element={<Blotter />} />
-                  <Route path="/officials" element={<Officials />} />
-                  <Route path="/announcements" element={<Announcements />} />
-                </Route>
-              </Route>
-            </Route>
+      {/* MAIN CONTENT */}
+      <div className="flex-1 p-8">
+        {page === 'dashboard' && (
+          <div>
+            <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="bg-white p-6 rounded-lg border shadow">Total Residents: <b>1,250</b></div>
+              <div className="bg-white p-6 rounded-lg border shadow">Blotter Cases: <b>12</b></div>
+              <div className="bg-white p-6 rounded-lg border shadow">Certificates: <b>45</b></div>
+            </div>
+            <div className="mt-6 bg-green-100 border border-green-300 p-4 rounded">
+              ✅ GREEN na! Hiwalay na: index.css (Tailwind) at custom.css (kulay)
+            </div>
+          </div>
+        )}
 
-            <Route path="*" element={<PageNotFound />} />
-          </Routes>
-          <Toaster />
-        </Router>
-      </QueryClientProvider>
-    </AuthProvider>
+        {page === 'blotter' && (
+          <div>
+            <h1 className="text-3xl font-bold mb-4">Blotter Records</h1>
+            <div className="bg-white p-6 rounded border">Dito yung Blotter Table mo</div>
+          </div>
+        )}
+
+        {page === 'certificate' && (
+          <div>
+            <h1 className="text-3xl font-bold mb-4">Barangay Certificate</h1>
+            <div className="bg-white p-6 rounded border">Dito yung Certificate Form mo</div>
+          </div>
+        )}
+
+        {page === 'residents' && (
+          <div>
+            <h1 className="text-3xl font-bold mb-4">Residents List</h1>
+            <div className="bg-white p-6 rounded border">Dito yung Residents Table mo</div>
+          </div>
+        )}
+      </div>
+    </div>
   )
 }
 
