@@ -11,6 +11,3 @@ export default defineConfig({
     },
   },
 })
-Sent
-Compose
-Write to Nyx Shade
