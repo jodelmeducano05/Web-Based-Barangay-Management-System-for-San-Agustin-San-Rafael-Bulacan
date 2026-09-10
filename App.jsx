@@ -6,8 +6,7 @@ const styles = {
   app: {
     minHeight: "100vh",
     background: "#f5f7fb",
-    fontFamily:
-      "Inter, Arial, Helvetica, sans-serif",
+    fontFamily: "Inter, Arial, Helvetica, sans-serif",
     color: "#172554",
   },
 
@@ -133,8 +132,7 @@ const styles = {
   sidebar: {
     width: 245,
     minHeight: "100vh",
-    background:
-      "linear-gradient(180deg,#061b45,#092b63)",
+    background: "linear-gradient(180deg,#061b45,#092b63)",
     color: "white",
     padding: 20,
     boxSizing: "border-box",
@@ -414,7 +412,128 @@ const styles = {
     cursor: "pointer",
     fontWeight: 700,
   },
+
+  /* =========================
+     RESIDENT STYLES
+  ========================= */
+
+  cardGrid: {
+    display: "grid",
+    gridTemplateColumns:
+      "repeat(auto-fit, minmax(220px, 1fr))",
+    gap: 18,
+    marginBottom: 25,
+  },
+
+  sectionHeader: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 25,
+    marginBottom: 12,
+  },
+
+  tableCard: {
+    background: "#fff",
+    borderRadius: 15,
+    padding: 20,
+    border: "1px solid #e6ebf2",
+    boxShadow: "0 5px 18px rgba(15,23,42,.04)",
+    overflowX: "auto",
+    marginBottom: 25,
+  },
+
+  pending: {
+    display: "inline-block",
+    padding: "5px 9px",
+    borderRadius: 20,
+    fontSize: 11,
+    fontWeight: 800,
+    background: "#fef3c7",
+    color: "#a16207",
+  },
+
+  approved: {
+    display: "inline-block",
+    padding: "5px 9px",
+    borderRadius: 20,
+    fontSize: 11,
+    fontWeight: 800,
+    background: "#dcfce7",
+    color: "#15803d",
+  },
+
+  feedCard: {
+    background: "#fff",
+    borderRadius: 15,
+    padding: 18,
+    border: "1px solid #e6ebf2",
+    marginBottom: 15,
+    boxShadow: "0 5px 18px rgba(15,23,42,.04)",
+  },
+
+  filterButtons: {
+    display: "flex",
+    gap: 10,
+    flexWrap: "wrap",
+    margin: "20px 0",
+  },
+
+  filterButton: {
+    border: "1px solid #d7deea",
+    background: "#fff",
+    color: "#475569",
+    padding: "9px 15px",
+    borderRadius: 20,
+    cursor: "pointer",
+    fontWeight: 700,
+  },
+
+  activeFilter: {
+    border: "none",
+    background: "#0b4b91",
+    color: "#fff",
+    padding: "9px 15px",
+    borderRadius: 20,
+    cursor: "pointer",
+    fontWeight: 700,
+  },
+
+  announcementGrid: {
+    display: "grid",
+    gridTemplateColumns:
+      "repeat(auto-fit, minmax(260px, 1fr))",
+    gap: 18,
+  },
+
+  announcementCard: {
+    background: "#fff",
+    borderRadius: 15,
+    padding: 20,
+    border: "1px solid #e6ebf2",
+    boxShadow: "0 5px 18px rgba(15,23,42,.04)",
+  },
+
+  announcementCategory: {
+    display: "inline-block",
+    padding: "5px 9px",
+    borderRadius: 20,
+    background: "#dbeafe",
+    color: "#1d4ed8",
+    fontSize: 10,
+    fontWeight: 800,
+    marginBottom: 10,
+  },
+
+  residentActionCard: {
+    cursor: "pointer",
+    transition: "transform .15s ease",
+  },
 };
+
+/* =========================================================
+   LOGIN
+========================================================= */
 
 function Login({ onLogin }) {
   const [role, setRole] = useState("Resident");
@@ -427,13 +546,17 @@ function Login({ onLogin }) {
     e.preventDefault();
 
     if (mode === "signup") {
-      setMessage("Account created successfully! You can now login.");
+      setMessage(
+        "Account created successfully! You can now login."
+      );
       setMode("login");
       return;
     }
 
     if (!email || !password) {
-      setMessage("Please enter your email and password.");
+      setMessage(
+        "Please enter your email and password."
+      );
       return;
     }
 
@@ -472,7 +595,10 @@ function Login({ onLogin }) {
               <button
                 key={item}
                 type="button"
-                onClick={() => setRole(item)}
+                onClick={() => {
+                  setRole(item);
+                  setMessage("");
+                }}
                 style={{
                   ...styles.roleButton,
                   ...(role === item
@@ -496,6 +622,7 @@ function Login({ onLogin }) {
               <label style={styles.label}>
                 Full Name
               </label>
+
               <input
                 style={styles.input}
                 placeholder="Enter your full name"
@@ -507,6 +634,7 @@ function Login({ onLogin }) {
             <label style={styles.label}>
               Email Address
             </label>
+
             <input
               type="email"
               style={styles.input}
@@ -523,6 +651,7 @@ function Login({ onLogin }) {
               <label style={styles.label}>
                 Password
               </label>
+
               <input
                 type="password"
                 style={styles.input}
@@ -669,7 +798,16 @@ function Login({ onLogin }) {
   );
 }
 
-function Sidebar({ role, page, setPage, logout }) {
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+function Sidebar({
+  role,
+  page,
+  setPage,
+  logout,
+}) {
   let menu = [];
 
   if (role === "Captain") {
@@ -706,6 +844,7 @@ function Sidebar({ role, page, setPage, logout }) {
             e.currentTarget.style.display = "none";
           }}
         />
+
         <div style={styles.brandText}>
           Barangay
           <br />
@@ -720,7 +859,9 @@ function Sidebar({ role, page, setPage, logout }) {
           key={item}
           style={{
             ...styles.menuButton,
-            ...(page === item ? styles.activeMenu : {}),
+            ...(page === item
+              ? styles.activeMenu
+              : {}),
           }}
           onClick={() => setPage(item)}
         >
@@ -737,7 +878,9 @@ function Sidebar({ role, page, setPage, logout }) {
       <div style={styles.bottomMenu}>
         <button
           style={styles.menuButton}
-          onClick={() => alert("Settings page")}
+          onClick={() =>
+            alert("Settings page")
+          }
         >
           ⚙ Settings
         </button>
@@ -752,6 +895,10 @@ function Sidebar({ role, page, setPage, logout }) {
     </aside>
   );
 }
+
+/* =========================================================
+   TOPBAR
+========================================================= */
 
 function Topbar({ role }) {
   return (
@@ -770,6 +917,10 @@ function Topbar({ role }) {
   );
 }
 
+/* =========================================================
+   STAT CARD
+========================================================= */
+
 function StatCard({
   title,
   value,
@@ -780,13 +931,21 @@ function StatCard({
       <div style={styles.cardTitle}>
         {title}
       </div>
-      <div style={styles.number}>{value}</div>
+
+      <div style={styles.number}>
+        {value}
+      </div>
+
       <div style={styles.small}>
         {subtitle}
       </div>
     </div>
   );
 }
+
+/* =========================================================
+   CAPTAIN DASHBOARD
+========================================================= */
 
 function CaptainDashboard({
   setPage,
@@ -799,6 +958,7 @@ function CaptainDashboard({
           <h1 style={styles.heading}>
             Good Morning, Captain
           </h1>
+
           <p style={styles.description}>
             Here's an overview of the barangay's
             administrative status today.
@@ -876,7 +1036,9 @@ function CaptainDashboard({
                   <th style={styles.th}>
                     CATEGORY
                   </th>
-                  <th style={styles.th}>SUBJECT</th>
+                  <th style={styles.th}>
+                    SUBJECT
+                  </th>
                   <th style={styles.th}>DATE</th>
                   <th style={styles.th}>STATUS</th>
                 </tr>
@@ -887,15 +1049,19 @@ function CaptainDashboard({
                   <td style={styles.td}>
                     BL-2023-089
                   </td>
+
                   <td style={styles.td}>
                     Disturbance
                   </td>
+
                   <td style={styles.td}>
                     Noise complaint at Block 4
                   </td>
+
                   <td style={styles.td}>
                     Oct 24
                   </td>
+
                   <td style={styles.td}>
                     <span
                       style={{
@@ -912,15 +1078,19 @@ function CaptainDashboard({
                   <td style={styles.td}>
                     BL-2023-088
                   </td>
+
                   <td style={styles.td}>
                     Property
                   </td>
+
                   <td style={styles.td}>
                     Property damage report
                   </td>
+
                   <td style={styles.td}>
                     Oct 23
                   </td>
+
                   <td style={styles.td}>
                     <span
                       style={{
@@ -957,9 +1127,9 @@ function CaptainDashboard({
           <p style={styles.small}>
             🟢 Just now
           </p>
+
           <p>
-            Admin approved Certificate
-            Request.
+            Admin approved Certificate Request.
           </p>
 
           <hr />
@@ -967,6 +1137,7 @@ function CaptainDashboard({
           <p style={styles.small}>
             🔴 15 minutes ago
           </p>
+
           <p>
             New blotter report was logged.
           </p>
@@ -976,6 +1147,7 @@ function CaptainDashboard({
           <p style={styles.small}>
             🔵 1 hour ago
           </p>
+
           <p>
             Resident record updated.
           </p>
@@ -984,6 +1156,10 @@ function CaptainDashboard({
     </>
   );
 }
+
+/* =========================================================
+   SECRETARY DASHBOARD
+========================================================= */
 
 function SecretaryDashboard({
   setPage,
@@ -996,6 +1172,7 @@ function SecretaryDashboard({
           <h1 style={styles.heading}>
             Secretary's Dashboard
           </h1>
+
           <p style={styles.description}>
             Overview of barangay operations and
             pending tasks.
@@ -1071,15 +1248,19 @@ function SecretaryDashboard({
                   <th style={styles.th}>
                     REQUEST ID
                   </th>
+
                   <th style={styles.th}>
                     RESIDENT NAME
                   </th>
+
                   <th style={styles.th}>
                     DOCUMENT TYPE
                   </th>
+
                   <th style={styles.th}>
                     STATUS
                   </th>
+
                   <th style={styles.th}>
                     ACTION
                   </th>
@@ -1153,9 +1334,11 @@ function SecretaryDashboard({
               }}
             >
               <b>OCT 24</b>
+
               <p style={{ margin: "8px 0" }}>
                 Case #BL-892
               </p>
+
               <small>
                 10:00 AM • Barangay Hall
               </small>
@@ -1168,7 +1351,9 @@ function SecretaryDashboard({
                 marginTop: 12,
               }}
               onClick={() =>
-                alert("Hearing details opened.")
+                alert(
+                  "Hearing details opened."
+                )
               }
             >
               View Details
@@ -1180,16 +1365,31 @@ function SecretaryDashboard({
               Recent Actions
             </h3>
 
-            <p>✓ Approved Barangay Clearance</p>
-            <p>✎ Updated Resident Record</p>
-            <p>⚖ Logged new Blotter Report</p>
-            <p>▣ Printed Certificate</p>
+            <p>
+              ✓ Approved Barangay Clearance
+            </p>
+
+            <p>
+              ✎ Updated Resident Record
+            </p>
+
+            <p>
+              ⚖ Logged new Blotter Report
+            </p>
+
+            <p>
+              ▣ Printed Certificate
+            </p>
           </div>
         </div>
       </div>
     </>
   );
 }
+
+/* =========================================================
+   SECRETARY ROW
+========================================================= */
 
 function SecretaryRow({
   id,
@@ -1210,10 +1410,13 @@ function SecretaryRow({
   return (
     <tr>
       <td style={styles.td}>{id}</td>
+
       <td style={styles.td}>
         <b>{name}</b>
       </td>
+
       <td style={styles.td}>{doc}</td>
+
       <td style={styles.td}>
         <span
           style={{
@@ -1224,6 +1427,7 @@ function SecretaryRow({
           {status}
         </span>
       </td>
+
       <td style={styles.td}>
         <button
           style={{
@@ -1242,6 +1446,11 @@ function SecretaryRow({
   );
 }
 
+/* =========================================================
+   DOCUMENT REQUESTS
+   CAPTAIN + SECRETARY ONLY
+========================================================= */
+
 function DocumentRequests({ openModal }) {
   return (
     <>
@@ -1250,6 +1459,7 @@ function DocumentRequests({ openModal }) {
           <h1 style={styles.heading}>
             Document Requests
           </h1>
+
           <p style={styles.description}>
             Manage and process pending civic
             documents.
@@ -1309,18 +1519,29 @@ function DocumentRequests({ openModal }) {
           <table style={styles.table}>
             <thead>
               <tr>
-                <th style={styles.th}>REQ ID</th>
+                <th style={styles.th}>
+                  REQ ID
+                </th>
+
                 <th style={styles.th}>
                   RESIDENT NAME
                 </th>
+
                 <th style={styles.th}>
                   DOCUMENT TYPE
                 </th>
+
                 <th style={styles.th}>
                   DATE SUBMITTED
                 </th>
-                <th style={styles.th}>STATUS</th>
-                <th style={styles.th}>ACTIONS</th>
+
+                <th style={styles.th}>
+                  STATUS
+                </th>
+
+                <th style={styles.th}>
+                  ACTIONS
+                </th>
               </tr>
             </thead>
 
@@ -1356,6 +1577,10 @@ function DocumentRequests({ openModal }) {
   );
 }
 
+/* =========================================================
+   REQUEST ROW
+========================================================= */
+
 function RequestRow({
   id,
   name,
@@ -1366,11 +1591,15 @@ function RequestRow({
   return (
     <tr>
       <td style={styles.td}>{id}</td>
+
       <td style={styles.td}>
         <b>{name}</b>
       </td>
+
       <td style={styles.td}>{doc}</td>
+
       <td style={styles.td}>{date}</td>
+
       <td style={styles.td}>
         <span
           style={{
@@ -1383,6 +1612,7 @@ function RequestRow({
           {status}
         </span>
       </td>
+
       <td style={styles.td}>
         <button
           style={{
@@ -1401,6 +1631,11 @@ function RequestRow({
   );
 }
 
+/* =========================================================
+   CAPTAIN + SECRETARY ANNOUNCEMENTS
+   THIS DESIGN IS NOT USED BY RESIDENT
+========================================================= */
+
 function Announcements({ openModal }) {
   const [title, setTitle] = useState("");
   const [category, setCategory] =
@@ -1409,11 +1644,16 @@ function Announcements({ openModal }) {
 
   const publish = () => {
     if (!title || !body) {
-      alert("Please complete the announcement.");
+      alert(
+        "Please complete the announcement."
+      );
       return;
     }
 
-    alert("Announcement published successfully!");
+    alert(
+      "Announcement published successfully!"
+    );
+
     setTitle("");
     setBody("");
   };
@@ -1425,6 +1665,7 @@ function Announcements({ openModal }) {
           <h1 style={styles.heading}>
             Announcements
           </h1>
+
           <p style={styles.description}>
             Draft and publish official
             communications to barangay residents.
@@ -1528,6 +1769,7 @@ function Announcements({ openModal }) {
           <p>
             <b>Water Main Maintenance</b>
           </p>
+
           <small>
             Zone 3 East • 2 hrs ago
           </small>
@@ -1535,8 +1777,11 @@ function Announcements({ openModal }) {
           <hr />
 
           <p>
-            <b>Monthly Town Hall Meeting</b>
+            <b>
+              Monthly Town Hall Meeting
+            </b>
           </p>
+
           <small>
             Tomorrow • 9:00 AM
           </small>
@@ -1544,14 +1789,22 @@ function Announcements({ openModal }) {
           <hr />
 
           <p>
-            <b>Community Center Renovation</b>
+            <b>
+              Community Center Renovation
+            </b>
           </p>
+
           <small>Draft</small>
         </div>
       </div>
     </>
   );
 }
+
+/* =========================================================
+   BLOTTER REPORTS
+   CAPTAIN + SECRETARY ONLY
+========================================================= */
 
 function BlotterReports({ openModal }) {
   const reports = [
@@ -1562,6 +1815,7 @@ function BlotterReports({ openModal }) {
       "Noise Complaint",
       "Pending Review",
     ],
+
     [
       "BL-2023-0141",
       "Oct 22, 2023",
@@ -1569,6 +1823,7 @@ function BlotterReports({ openModal }) {
       "Property Damage",
       "Hearing Scheduled",
     ],
+
     [
       "BL-2023-0140",
       "Oct 20, 2023",
@@ -1576,6 +1831,7 @@ function BlotterReports({ openModal }) {
       "Physical Injury",
       "Resolved",
     ],
+
     [
       "BL-2023-0139",
       "Oct 18, 2023",
@@ -1592,6 +1848,7 @@ function BlotterReports({ openModal }) {
           <h1 style={styles.heading}>
             Blotter Reports
           </h1>
+
           <p style={styles.description}>
             Manage and track all filed incidents
             within the barangay jurisdiction.
@@ -1620,17 +1877,29 @@ function BlotterReports({ openModal }) {
         >
           <select style={styles.input}>
             <option>All Statuses</option>
-            <option>Pending Review</option>
+            <option>
+              Pending Review
+            </option>
             <option>Resolved</option>
-            <option>Hearing Scheduled</option>
+            <option>
+              Hearing Scheduled
+            </option>
           </select>
 
           <select style={styles.input}>
             <option>All Types</option>
-            <option>Noise Complaint</option>
-            <option>Property Damage</option>
-            <option>Physical Injury</option>
-            <option>Waste Disposal</option>
+            <option>
+              Noise Complaint
+            </option>
+            <option>
+              Property Damage
+            </option>
+            <option>
+              Physical Injury
+            </option>
+            <option>
+              Waste Disposal
+            </option>
           </select>
 
           <input
@@ -1643,18 +1912,29 @@ function BlotterReports({ openModal }) {
           <table style={styles.table}>
             <thead>
               <tr>
-                <th style={styles.th}>CASE ID</th>
+                <th style={styles.th}>
+                  CASE ID
+                </th>
+
                 <th style={styles.th}>
                   DATE FILED
                 </th>
+
                 <th style={styles.th}>
                   COMPLAINANT / RESPONDENT
                 </th>
+
                 <th style={styles.th}>
                   INCIDENT TYPE
                 </th>
-                <th style={styles.th}>STATUS</th>
-                <th style={styles.th}>ACTION</th>
+
+                <th style={styles.th}>
+                  STATUS
+                </th>
+
+                <th style={styles.th}>
+                  ACTION
+                </th>
               </tr>
             </thead>
 
@@ -1664,20 +1944,25 @@ function BlotterReports({ openModal }) {
                   <td style={styles.td}>
                     {r[0]}
                   </td>
+
                   <td style={styles.td}>
                     {r[1]}
                   </td>
+
                   <td style={styles.td}>
                     {r[2]}
                   </td>
+
                   <td style={styles.td}>
                     {r[3]}
                   </td>
+
                   <td style={styles.td}>
                     <span
                       style={{
                         ...styles.badge,
-                        ...(r[4] === "Resolved"
+                        ...(r[4] ===
+                        "Resolved"
                           ? styles.greenBadge
                           : r[4] ===
                             "Pending Review"
@@ -1688,6 +1973,7 @@ function BlotterReports({ openModal }) {
                       {r[4]}
                     </span>
                   </td>
+
                   <td style={styles.td}>
                     <button
                       style={{
@@ -1715,63 +2001,112 @@ function BlotterReports({ openModal }) {
   );
 }
 
-function ResidentDashboard({ setPage, openModal }) {
+/* =========================================================
+   RESIDENT DASHBOARD
+========================================================= */
+
+function ResidentDashboard({
+  setPage,
+  openModal,
+}) {
   return (
     <>
       <div style={styles.headingRow}>
         <div>
-          <h1 style={styles.heading}>Welcome back, Maria!</h1>
+          <h1 style={styles.heading}>
+            Welcome back, Maria!
+          </h1>
+
           <p style={styles.description}>
-            Your resident dashboard is updated for today.
+            Your resident dashboard is updated
+            for today.
           </p>
         </div>
 
         <button
           style={styles.button}
-          onClick={() => setPage("Document Requests")}
+          onClick={() =>
+            setPage("My Requests")
+          }
         >
           + Request Document
         </button>
       </div>
 
       {/* Quick Actions */}
-      <h3 style={{ marginTop: 28 }}>Quick Actions</h3>
+
+      <h3 style={{ marginTop: 28 }}>
+        Quick Actions
+      </h3>
 
       <div style={styles.cardGrid}>
         <div
-          style={styles.card}
-          onClick={() => setPage("Document Requests")}
+          style={{
+            ...styles.card,
+            ...styles.residentActionCard,
+          }}
+          onClick={() =>
+            setPage("My Requests")
+          }
         >
           <h3>📄</h3>
+
           <h3>Request Document</h3>
-          <p>Request barangay certificates and other documents.</p>
+
+          <p>
+            Request barangay certificates and
+            other documents.
+          </p>
         </div>
 
         <div
-          style={styles.card}
-          onClick={() => setPage("Blotter Reports")}
+          style={{
+            ...styles.card,
+            ...styles.residentActionCard,
+          }}
+          onClick={() =>
+            setPage("My Reports")
+          }
         >
           <h3>⚠️</h3>
+
           <h3>File Blotter</h3>
-          <p>Report an incident to the barangay.</p>
+
+          <p>
+            Report an incident to the barangay.
+          </p>
         </div>
 
         <div
-          style={styles.card}
-          onClick={() => setPage("Announcements")}
+          style={{
+            ...styles.card,
+            ...styles.residentActionCard,
+          }}
+          onClick={() =>
+            setPage("Announcements")
+          }
         >
           <h3>📢</h3>
+
           <h3>Announcements</h3>
-          <p>View the latest community announcements.</p>
+
+          <p>
+            View the latest community
+            announcements.
+          </p>
         </div>
       </div>
 
       {/* Active Requests */}
+
       <div style={styles.sectionHeader}>
         <h3>My Active Requests</h3>
+
         <button
           style={styles.linkButton}
-          onClick={() => setPage("Document Requests")}
+          onClick={() =>
+            setPage("My Requests")
+          }
         >
           View All
         </button>
@@ -1781,41 +2116,82 @@ function ResidentDashboard({ setPage, openModal }) {
         <table style={styles.table}>
           <thead>
             <tr>
-              <th>TYPE</th>
-              <th>DATE FILED</th>
-              <th>STATUS</th>
-              <th>ACTION</th>
+              <th style={styles.th}>
+                TYPE
+              </th>
+
+              <th style={styles.th}>
+                DATE FILED
+              </th>
+
+              <th style={styles.th}>
+                STATUS
+              </th>
+
+              <th style={styles.th}>
+                ACTION
+              </th>
             </tr>
           </thead>
 
           <tbody>
             <tr>
-              <td>Barangay Clearance</td>
-              <td>Oct 24, 2023</td>
-              <td>
-                <span style={styles.pending}>Pending</span>
+              <td style={styles.td}>
+                Barangay Clearance
               </td>
-              <td>👁</td>
+
+              <td style={styles.td}>
+                Oct 24, 2023
+              </td>
+
+              <td style={styles.td}>
+                <span
+                  style={styles.pending}
+                >
+                  Pending
+                </span>
+              </td>
+
+              <td style={styles.td}>
+                👁
+              </td>
             </tr>
 
             <tr>
-              <td>Birth Certificate</td>
-              <td>Oct 20, 2023</td>
-              <td>
-                <span style={styles.approved}>Approved</span>
+              <td style={styles.td}>
+                Birth Certificate
               </td>
-              <td>👁</td>
+
+              <td style={styles.td}>
+                Oct 20, 2023
+              </td>
+
+              <td style={styles.td}>
+                <span
+                  style={styles.approved}
+                >
+                  Approved
+                </span>
+              </td>
+
+              <td style={styles.td}>
+                👁
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
 
       {/* Community Feed */}
+
       <div style={styles.sectionHeader}>
         <h3>Community Feed</h3>
+
         <button
           style={styles.linkButton}
-          onClick={() => setPage("Announcements")}
+          onClick={() =>
+            setPage("Announcements")
+          }
         >
           View All
         </button>
@@ -1823,38 +2199,58 @@ function ResidentDashboard({ setPage, openModal }) {
 
       <div style={styles.feedCard}>
         <h4>📢 Barangay Assembly</h4>
+
         <p>
-          Join us for the upcoming barangay assembly and community meeting.
+          Join us for the upcoming barangay
+          assembly and community meeting.
         </p>
-        <small>Today • 8:00 AM</small>
+
+        <small>
+          Today • 8:00 AM
+        </small>
       </div>
 
       <div style={styles.feedCard}>
-        <h4>💧 Water Interruption Advisory</h4>
+        <h4>
+          💧 Water Interruption Advisory
+        </h4>
+
         <p>
-          Please be advised of a scheduled water service interruption.
+          Please be advised of a scheduled water
+          service interruption.
         </p>
+
         <small>Tomorrow</small>
       </div>
     </>
   );
 }
 
-function ResidentAnnouncemen
+/* =========================================================
+   RESIDENT ANNOUNCEMENTS
+   RESIDENT ONLY
+========================================================= */
+
+function ResidentAnnouncement() {
+  const announcements = [
     {
       category: "INFRASTRUCTURE",
-      title: "Main Street Water Main Repair Schedule",
+      title:
+        "Main Street Water Main Repair Schedule",
       description:
         "Emergency repairs on the main water line will begin tomorrow. Expect partial lane closures.",
       date: "Today • 8:00 AM",
     },
+
     {
       category: "PUBLIC HEALTH",
-      title: "Annual Flu Vaccination Drive Begins Next Week",
+      title:
+        "Annual Flu Vaccination Drive Begins Next Week",
       description:
         "The health center will provide free vaccination services to residents.",
       date: "Oct 12, 2023",
     },
+
     {
       category: "EVENTS",
       title: "Barangay Festival",
@@ -1862,9 +2258,11 @@ function ResidentAnnouncemen
         "Join the community for the annual barangay festival.",
       date: "Oct 15 • 10 AM",
     },
+
     {
       category: "SERVICES",
-      title: "Holiday Waste Collection Schedule",
+      title:
+        "Holiday Waste Collection Schedule",
       description:
         "Trash and recycling collection schedules will be adjusted during the holiday.",
       date: "Oct 20, 2023",
@@ -1873,35 +2271,380 @@ function ResidentAnnouncemen
 
   return (
     <>
-      <h1 style={styles.heading}>Announcements</h1>
+      <h1 style={styles.heading}>
+        Announcements
+      </h1>
 
       <p style={styles.description}>
-        Stay updated with the latest news, alerts, and events in your area.
+        Stay updated with the latest news,
+        alerts, and events in your area.
       </p>
 
       <div style={styles.filterButtons}>
-        <button style={styles.activeFilter}>All</button>
-        <button style={styles.filterButton}>Public Health</button>
-        <button style={styles.filterButton}>Infrastructure</button>
-        <button style={styles.filterButton}>Events</button>
+        <button
+          style={styles.activeFilter}
+        >
+          All
+        </button>
+
+        <button
+          style={styles.filterButton}
+        >
+          Public Health
+        </button>
+
+        <button
+          style={styles.filterButton}
+        >
+          Infrastructure
+        </button>
+
+        <button
+          style={styles.filterButton}
+        >
+          Events
+        </button>
       </div>
 
       <div style={styles.announcementGrid}>
-        {announcements.map((item, index) => (
-          <div style={styles.announcementCard} key={index}>
-            <small>{item.category}</small>
+        {announcements.map(
+          (item, index) => (
+            <div
+              style={styles.announcementCard}
+              key={index}
+            >
+              <span
+                style={
+                  styles.announcementCategory
+                }
+              >
+                {item.category}
+              </span>
 
-            <h2>{item.title}</h2>
+              <h2
+                style={{
+                  color: "#173b76",
+                  fontSize: 19,
+                  margin:
+                    "5px 0 10px",
+                }}
+              >
+                {item.title}
+              </h2>
 
-            <p>{item.description}</p>
+              <p
+                style={{
+                  color: "#64748b",
+                  lineHeight: 1.6,
+                }}
+              >
+                {item.description}
+              </p>
 
-            <small>{item.date}</small>
-          </div>
-        ))}
+              <small
+                style={{
+                  color: "#94a3b8",
+                }}
+              >
+                {item.date}
+              </small>
+            </div>
+          )
+        )}
       </div>
     </>
   );
 }
+
+/* =========================================================
+   RESIDENT MY REQUESTS
+========================================================= */
+
+function ResidentRequests() {
+  return (
+    <>
+      <div style={styles.headingRow}>
+        <div>
+          <h1 style={styles.heading}>
+            My Requests
+          </h1>
+
+          <p style={styles.description}>
+            View and track your submitted
+            document requests.
+          </p>
+        </div>
+
+        <button
+          style={styles.button}
+          onClick={() =>
+            alert(
+              "New document request opened."
+            )
+          }
+        >
+          + Request Document
+        </button>
+      </div>
+
+      <div style={styles.cards}>
+        <StatCard
+          title="Total Requests"
+          value="2"
+          subtitle="Your submitted requests"
+        />
+
+        <StatCard
+          title="Pending"
+          value="1"
+          subtitle="Waiting for processing"
+        />
+
+        <StatCard
+          title="Approved"
+          value="1"
+          subtitle="Ready for release"
+        />
+      </div>
+
+      <div style={styles.section}>
+        <h3 style={styles.sectionTitle}>
+          My Document Requests
+        </h3>
+
+        <div style={styles.tableWrap}>
+          <table style={styles.table}>
+            <thead>
+              <tr>
+                <th style={styles.th}>
+                  REQUEST ID
+                </th>
+
+                <th style={styles.th}>
+                  DOCUMENT
+                </th>
+
+                <th style={styles.th}>
+                  DATE FILED
+                </th>
+
+                <th style={styles.th}>
+                  STATUS
+                </th>
+
+                <th style={styles.th}>
+                  ACTION
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td style={styles.td}>
+                  REQ-2023-045
+                </td>
+
+                <td style={styles.td}>
+                  Barangay Clearance
+                </td>
+
+                <td style={styles.td}>
+                  Oct 24, 2023
+                </td>
+
+                <td style={styles.td}>
+                  <span
+                    style={{
+                      ...styles.badge,
+                      ...styles.yellowBadge,
+                    }}
+                  >
+                    Pending
+                  </span>
+                </td>
+
+                <td style={styles.td}>
+                  <button
+                    style={{
+                      ...styles.secondaryButton,
+                      padding:
+                        "7px 12px",
+                    }}
+                    onClick={() =>
+                      alert(
+                        "Request details opened."
+                      )
+                    }
+                  >
+                    View
+                  </button>
+                </td>
+              </tr>
+
+              <tr>
+                <td style={styles.td}>
+                  REQ-2023-038
+                </td>
+
+                <td style={styles.td}>
+                  Birth Certificate
+                </td>
+
+                <td style={styles.td}>
+                  Oct 20, 2023
+                </td>
+
+                <td style={styles.td}>
+                  <span
+                    style={{
+                      ...styles.badge,
+                      ...styles.greenBadge,
+                    }}
+                  >
+                    Approved
+                  </span>
+                </td>
+
+                <td style={styles.td}>
+                  <button
+                    style={{
+                      ...styles.secondaryButton,
+                      padding:
+                        "7px 12px",
+                    }}
+                    onClick={() =>
+                      alert(
+                        "Request details opened."
+                      )
+                    }
+                  >
+                    View
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </>
+  );
+}
+
+/* =========================================================
+   RESIDENT MY REPORTS
+========================================================= */
+
+function ResidentReports() {
+  return (
+    <>
+      <div style={styles.headingRow}>
+        <div>
+          <h1 style={styles.heading}>
+            My Reports
+          </h1>
+
+          <p style={styles.description}>
+            File and track incidents that you
+            reported to the barangay.
+          </p>
+        </div>
+
+        <button
+          style={styles.button}
+          onClick={() =>
+            alert(
+              "New blotter report form opened."
+            )
+          }
+        >
+          + File Blotter
+        </button>
+      </div>
+
+      <div style={styles.section}>
+        <h3 style={styles.sectionTitle}>
+          My Filed Reports
+        </h3>
+
+        <div style={styles.tableWrap}>
+          <table style={styles.table}>
+            <thead>
+              <tr>
+                <th style={styles.th}>
+                  CASE ID
+                </th>
+
+                <th style={styles.th}>
+                  DATE FILED
+                </th>
+
+                <th style={styles.th}>
+                  INCIDENT
+                </th>
+
+                <th style={styles.th}>
+                  STATUS
+                </th>
+
+                <th style={styles.th}>
+                  ACTION
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td style={styles.td}>
+                  MY-BL-001
+                </td>
+
+                <td style={styles.td}>
+                  Oct 24, 2023
+                </td>
+
+                <td style={styles.td}>
+                  Noise Complaint
+                </td>
+
+                <td style={styles.td}>
+                  <span
+                    style={{
+                      ...styles.badge,
+                      ...styles.blueBadge,
+                    }}
+                  >
+                    Under Review
+                  </span>
+                </td>
+
+                <td style={styles.td}>
+                  <button
+                    style={{
+                      ...styles.secondaryButton,
+                      padding:
+                        "7px 12px",
+                    }}
+                    onClick={() =>
+                      alert(
+                        "Report details opened."
+                      )
+                    }
+                  >
+                    View
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </>
+  );
+}
+
+/* =========================================================
+   SIMPLE PAGE
+========================================================= */
 
 function SimplePage({ title }) {
   return (
@@ -1918,7 +2661,9 @@ function SimplePage({ title }) {
       <button
         style={styles.button}
         onClick={() =>
-          alert(`${title} opened successfully.`)
+          alert(
+            `${title} opened successfully.`
+          )
         }
       >
         Open {title}
@@ -1926,6 +2671,10 @@ function SimplePage({ title }) {
     </div>
   );
 }
+
+/* =========================================================
+   MODAL
+========================================================= */
 
 function Modal({ title, close }) {
   const [name, setName] = useState("");
@@ -1994,11 +2743,47 @@ function Modal({ title, close }) {
   );
 }
 
+/* =========================================================
+   APP
+========================================================= */
+
 function App() {
   const [user, setUser] = useState(null);
   const [page, setPage] =
     useState("Dashboard");
-  const [modal, setModal] = useState(null);
+  const [modal, setModal] =
+    useState(null);
+
+  /* =====================================================
+     ROLE PERMISSIONS
+  ===================================================== */
+
+  const permissions = {
+    Resident: [
+      "Dashboard",
+      "My Requests",
+      "Announcements",
+      "My Reports",
+    ],
+
+    Captain: [
+      "Dashboard",
+      "Document Requests",
+      "Announcements",
+      "Blotter Reports",
+    ],
+
+    Secretary: [
+      "Dashboard",
+      "Document Requests",
+      "Announcements",
+      "Blotter Reports",
+    ],
+  };
+
+  /* =====================================================
+     LOGIN
+  ===================================================== */
 
   const login = (role, email) => {
     setUser({
@@ -2007,71 +2792,247 @@ function App() {
     });
 
     setPage("Dashboard");
+    setModal(null);
   };
+
+  /* =====================================================
+     LOGOUT
+  ===================================================== */
 
   const logout = () => {
     setUser(null);
     setPage("Dashboard");
+    setModal(null);
   };
+
+  /* =====================================================
+     PERMISSION-CHECKED PAGE NAVIGATION
+
+     This prevents one role from manually trying to
+     navigate to another role's page.
+  ===================================================== */
+
+  const changePage = (requestedPage) => {
+    if (!user) {
+      return;
+    }
+
+    const allowedPages =
+      permissions[user.role] || [];
+
+    if (
+      allowedPages.includes(requestedPage)
+    ) {
+      setPage(requestedPage);
+      setModal(null);
+    } else {
+      alert(
+        `Access denied. ${user.role} does not have permission to open "${requestedPage}".`
+      );
+    }
+  };
+
+  /* =====================================================
+     MODAL PERMISSION
+
+     Only Captain and Secretary can use admin modals.
+  ===================================================== */
+
+  const openModal = (title) => {
+    if (
+      !user ||
+      !["Captain", "Secretary"].includes(
+        user.role
+      )
+    ) {
+      alert(
+        "Access denied. This function is only available to Captain or Secretary."
+      );
+      return;
+    }
+
+    setModal(title);
+  };
+
+  const closeModal = () => {
+    setModal(null);
+  };
+
+  /* =====================================================
+     LOGIN SCREEN
+  ===================================================== */
 
   if (!user) {
     return <Login onLogin={login} />;
   }
 
-  const openModal = (title) =>
-    setModal(title);
+  /* =====================================================
+     EXTRA SECURITY CHECK
 
-  const closeModal = () =>
-    setModal(null);
+     If the current page is not allowed for the
+     logged-in role, automatically return to Dashboard.
+  ===================================================== */
+
+  const allowedPages =
+    permissions[user.role] || [];
+
+  if (!allowedPages.includes(page)) {
+    setPage("Dashboard");
+
+    return null;
+  }
+
+  /* =====================================================
+     PAGE CONTENT
+  ===================================================== */
 
   let content;
+
+  /* ================= DASHBOARD ================= */
 
   if (page === "Dashboard") {
     if (user.role === "Captain") {
       content = (
         <CaptainDashboard
-          setPage={setPage}
+          setPage={changePage}
           openModal={openModal}
         />
       );
-    } else if (user.role === "Secretary") {
+    } else if (
+      user.role === "Secretary"
+    ) {
       content = (
         <SecretaryDashboard
-          setPage={setPage}
+          setPage={changePage}
           openModal={openModal}
         />
       );
     } else {
       content = (
         <ResidentDashboard
-          setPage={setPage}
+          setPage={changePage}
           openModal={openModal}
         />
       );
     }
-  } else if (page === "Document Requests") {
-    content = (
-      <DocumentRequests
-        openModal={openModal}
-      />
-    );
-  } else if (page === "Announcements") {
-    content = (
-      <Announcements
-        openModal={openModal}
-      />
-    );
-  } else if (page === "Blotter Reports") {
-    content = (
-      <BlotterReports
-        openModal={openModal}
-      />
-    );
-  } else {
+  }
+
+  /* ============ DOCUMENT REQUESTS ============ */
+
+  else if (
+    page === "Document Requests"
+  ) {
+    if (
+      user.role === "Captain" ||
+      user.role === "Secretary"
+    ) {
+      content = (
+        <DocumentRequests
+          openModal={openModal}
+        />
+      );
+    } else {
+      content = (
+        <AccessDenied
+          role={user.role}
+          page="Document Requests"
+        />
+      );
+    }
+  }
+
+  /* ================ ANNOUNCEMENTS ================ */
+
+  else if (page === "Announcements") {
+    /*
+      IMPORTANT:
+
+      Resident:
+        ResidentAnnouncement
+
+      Captain:
+        Original Announcements
+
+      Secretary:
+        Original Announcements
+    */
+
+    if (user.role === "Resident") {
+      content = <ResidentAnnouncement />;
+    } else {
+      content = (
+        <Announcements
+          openModal={openModal}
+        />
+      );
+    }
+  }
+
+  /* ============== BLOTTER REPORTS ============== */
+
+  else if (
+    page === "Blotter Reports"
+  ) {
+    if (
+      user.role === "Captain" ||
+      user.role === "Secretary"
+    ) {
+      content = (
+        <BlotterReports
+          openModal={openModal}
+        />
+      );
+    } else {
+      content = (
+        <AccessDenied
+          role={user.role}
+          page="Blotter Reports"
+        />
+      );
+    }
+  }
+
+  /* ================ MY REQUESTS ================ */
+
+  else if (page === "My Requests") {
+    if (user.role === "Resident") {
+      content = <ResidentRequests />;
+    } else {
+      content = (
+        <AccessDenied
+          role={user.role}
+          page="My Requests"
+        />
+      );
+    }
+  }
+
+  /* ================= MY REPORTS ================= */
+
+  else if (page === "My Reports") {
+    if (user.role === "Resident") {
+      content = <ResidentReports />;
+    } else {
+      content = (
+        <AccessDenied
+          role={user.role}
+          page="My Reports"
+        />
+      );
+    }
+  }
+
+  /* ================= OTHER ================= */
+
+  else {
     content = (
       <SimplePage title={page} />
     );
   }
+
+  /* =====================================================
+     FINAL UI
+  ===================================================== */
 
   return (
     <div style={styles.app}>
@@ -2079,7 +3040,7 @@ function App() {
         <Sidebar
           role={user.role}
           page={page}
-          setPage={setPage}
+          setPage={changePage}
           logout={logout}
         />
 
@@ -2098,6 +3059,29 @@ function App() {
           close={closeModal}
         />
       )}
+    </div>
+  );
+}
+
+/* =========================================================
+   ACCESS DENIED
+========================================================= */
+
+function AccessDenied({
+  role,
+  page,
+}) {
+  return (
+    <div style={styles.section}>
+      <h2 style={styles.sectionTitle}>
+        Access Denied
+      </h2>
+
+      <p style={styles.description}>
+        The <b>{role}</b> role does not have
+        permission to access{" "}
+        <b>{page}</b>.
+      </p>
     </div>
   );
 }
