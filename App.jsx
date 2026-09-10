@@ -686,7 +686,7 @@ function Sidebar({ role, page, setPage, logout }) {
       "Announcements",
       "Blotter Reports",
     ];
-  } else {role=== "Resident") {
+  } else if {role=== "Resident") {
     menu = [
       "Dashboard",
       "My Requests",
