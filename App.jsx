@@ -417,7 +417,7 @@ const styles = {
 };
 
 function Login({ onLogin }) {
-  const [role, setRole] = useState("Resident");
+  const [role, setRole] = useState("Resident,Captain,Secretary");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mode, setMode] = useState("login");
@@ -686,7 +686,7 @@ function Sidebar({ role, page, setPage, logout }) {
       "Announcements",
       "Blotter Reports",
     ];
-  } else {
+  } else {role=== "Resident") {
     menu = [
       "Dashboard",
       "My Requests",
@@ -1715,130 +1715,126 @@ function BlotterReports({ openModal }) {
   );
 }
 
-function ResidentDashboard({
-  setPage,
-  openModal,
-}) {
+function ResidentDashboard({ setPage, openModal }) {
   return (
     <>
       <div style={styles.headingRow}>
         <div>
-          <h1 style={styles.heading}>
-            Resident Dashboard
-          </h1>
+          <h1 style={styles.heading}>Welcome back, Maria!</h1>
           <p style={styles.description}>
-            Welcome to the San Agustin Barangay
-            Management System.
+            Your resident dashboard is updated for today.
           </p>
         </div>
 
         <button
           style={styles.button}
-          onClick={() =>
-            openModal("New Document Request")
-          }
+          onClick={() => setPage("Document Requests")}
         >
           + Request Document
         </button>
       </div>
 
-      <div style={styles.cards}>
-        <StatCard
-          title="My Requests"
-          value="4"
-          subtitle="2 pending"
-        />
+      {/* Quick Actions */}
+      <h3 style={{ marginTop: 28 }}>Quick Actions</h3>
 
-        <StatCard
-          title="Ready for Pickup"
-          value="2"
-          subtitle="Documents ready"
-        />
+      <div style={styles.cardGrid}>
+        <div
+          style={styles.card}
+          onClick={() => setPage("Document Requests")}
+        >
+          <h3>📄</h3>
+          <h3>Request Document</h3>
+          <p>Request barangay certificates and other documents.</p>
+        </div>
 
-        <StatCard
-          title="Announcements"
-          value="6"
-          subtitle="New announcements"
-        />
+        <div
+          style={styles.card}
+          onClick={() => setPage("Blotter Reports")}
+        >
+          <h3>⚠️</h3>
+          <h3>File Blotter</h3>
+          <p>Report an incident to the barangay.</p>
+        </div>
+
+        <div
+          style={styles.card}
+          onClick={() => setPage("Announcements")}
+        >
+          <h3>📢</h3>
+          <h3>Announcements</h3>
+          <p>View the latest community announcements.</p>
+        </div>
       </div>
 
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>
-          My Recent Requests
-        </h3>
+      {/* Active Requests */}
+      <div style={styles.sectionHeader}>
+        <h3>My Active Requests</h3>
+        <button
+          style={styles.linkButton}
+          onClick={() => setPage("Document Requests")}
+        >
+          View All
+        </button>
+      </div>
 
+      <div style={styles.tableCard}>
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}>
-                REQUEST ID
-              </th>
-              <th style={styles.th}>
-                DOCUMENT
-              </th>
-              <th style={styles.th}>DATE</th>
-              <th style={styles.th}>STATUS</th>
+              <th>TYPE</th>
+              <th>DATE FILED</th>
+              <th>STATUS</th>
+              <th>ACTION</th>
             </tr>
           </thead>
 
           <tbody>
             <tr>
-              <td style={styles.td}>
-                REQ-00124
+              <td>Barangay Clearance</td>
+              <td>Oct 24, 2023</td>
+              <td>
+                <span style={styles.pending}>Pending</span>
               </td>
-              <td style={styles.td}>
-                Barangay Clearance
-              </td>
-              <td style={styles.td}>
-                Oct 24
-              </td>
-              <td style={styles.td}>
-                <span
-                  style={{
-                    ...styles.badge,
-                    ...styles.blueBadge,
-                  }}
-                >
-                  Processing
-                </span>
-              </td>
+              <td>👁</td>
             </tr>
 
             <tr>
-              <td style={styles.td}>
-                REQ-00120
+              <td>Birth Certificate</td>
+              <td>Oct 20, 2023</td>
+              <td>
+                <span style={styles.approved}>Approved</span>
               </td>
-              <td style={styles.td}>
-                Certificate of Residency
-              </td>
-              <td style={styles.td}>
-                Oct 20
-              </td>
-              <td style={styles.td}>
-                <span
-                  style={{
-                    ...styles.badge,
-                    ...styles.greenBadge,
-                  }}
-                >
-                  Ready
-                </span>
-              </td>
+              <td>👁</td>
             </tr>
           </tbody>
         </table>
+      </div>
 
+      {/* Community Feed */}
+      <div style={styles.sectionHeader}>
+        <h3>Community Feed</h3>
         <button
-          style={{
-            ...styles.linkButton,
-            marginTop: 15,
-          }}
-          onClick={() =>
-            setPage("My Requests")
-          }
+          style={styles.linkButton}
+          onClick={() => setPage("Announcements")}
         >
-          View My Requests →
+          View All
         </button>
+      </div>
+
+      <div style={styles.feedCard}>
+        <h4>📢 Barangay Assembly</h4>
+        <p>
+          Join us for the upcoming barangay assembly and community meeting.
+        </p>
+        <small>Today • 8:00 AM</small>
+      </div>
+
+      <div style={styles.feedCard}>
+        <h4>💧 Water Interruption Advisory</h4>
+        <p>
+          Please be advised of a scheduled water service interruption.
+        </p>
+        <small>Tomorrow</small>
       </div>
     </>
   );
