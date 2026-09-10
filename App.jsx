@@ -1770,7 +1770,40 @@ function ResidentDashboard({ setPage, openModal }) {
     View All
   </button>
 </div>
+        
 
+function AnnouncementsPage() {
+  const announcements = [
+    {
+      title: "📢 Barangay Assembly",
+      message:
+        "Join us for the upcoming barangay assembly and community meeting.",
+      date: "Today • 8:00 AM",
+    },
+    {
+      title: "💧 Water Interruption Advisory",
+      message:
+        "Please be advised of a scheduled water service interruption.",
+      date: "Tomorrow",
+    },
+  ];
+
+  return (
+    <div style={styles.section}>
+      <h2 style={styles.sectionTitle}>📢 Announcements</h2>
+
+      {announcements.map((announcement, index) => (
+        <div key={index} style={styles.feedCard}>
+          <h4>{announcement.title}</h4>
+
+          <p>{announcement.message}</p>
+
+          <small>{announcement.date}</small>
+        </div>
+      ))}
+    </div>
+  );
+}
 
       {/* Active Requests */}
       <div style={styles.sectionHeader}>
