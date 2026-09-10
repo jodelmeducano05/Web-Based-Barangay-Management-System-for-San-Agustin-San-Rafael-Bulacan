@@ -1769,7 +1769,6 @@ function ResidentDashboard({ setPage, openModal }) {
       Walang bagong announcement sa ngayon.
     </p>
   </div>
-</div>
 
 
       {/* Active Requests */}
@@ -1842,7 +1841,7 @@ function ResidentDashboard({ setPage, openModal }) {
         </p>
         <small>Tomorrow</small>
       </div>
-    </div>
+    </>
   );
 }
 
