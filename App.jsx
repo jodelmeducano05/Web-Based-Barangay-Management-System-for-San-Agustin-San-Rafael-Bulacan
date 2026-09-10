@@ -1756,13 +1756,21 @@ function ResidentDashboard({ setPage, openModal }) {
           <p>Report an incident to the barangay.</p>
         </div>
 
-        <div
-          style={styles.card}
-          <h3>📢</h3>
-          <h3>Announcements</h3>
-          <p>View the latest community announcements.</p>
-        </div>
-      </div>
+        <div style={styles.card}>
+  <h3>📢 Announcements</h3>
+
+  <p>
+    Latest community announcements will appear here.
+  </p>
+
+  <div>
+    <h4>Barangay Announcement</h4>
+    <p>
+      Walang bagong announcement sa ngayon.
+    </p>
+  </div>
+</div>
+
 
       {/* Active Requests */}
       <div style={styles.sectionHeader}>
