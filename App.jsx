@@ -275,6 +275,58 @@ const styles = {
     marginBottom: 25,
   },
 
+  cardGrid: {
+    display: "grid",
+    gridTemplateColumns:
+      "repeat(auto-fit,minmax(210px,1fr))",
+    gap: 18,
+    marginBottom: 25,
+  },
+
+  sectionHeader: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 12,
+    margin: "24px 0 12px",
+  },
+
+  tableCard: {
+    background: "#fff",
+    borderRadius: 15,
+    padding: 20,
+    border: "1px solid #e6ebf2",
+    overflowX: "auto",
+  },
+
+  feedCard: {
+    background: "#fff",
+    borderRadius: 12,
+    padding: 16,
+    border: "1px solid #e6ebf2",
+    marginBottom: 12,
+  },
+
+  pending: {
+    display: "inline-block",
+    padding: "5px 9px",
+    borderRadius: 20,
+    fontSize: 11,
+    fontWeight: 800,
+    background: "#fef3c7",
+    color: "#a16207",
+  },
+
+  approved: {
+    display: "inline-block",
+    padding: "5px 9px",
+    borderRadius: 20,
+    fontSize: 11,
+    fontWeight: 800,
+    background: "#dcfce7",
+    color: "#15803d",
+  },
+
   card: {
     background: "#fff",
     borderRadius: 15,
@@ -417,7 +469,7 @@ const styles = {
 };
 
 function Login({ onLogin }) {
-  const [role, setRole] = useState("Resident,Captain,Secretary");
+  const [role, setRole] = useState("Resident");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mode, setMode] = useState("login");
@@ -686,7 +738,7 @@ function Sidebar({ role, page, setPage, logout }) {
       "Announcements",
       "Blotter Reports",
     ];
-  } else if (role=== "Resident") {
+  } else if (role === "Resident") {
     menu = [
       "Dashboard",
       "My Requests",
@@ -1772,38 +1824,7 @@ function ResidentDashboard({ setPage, openModal }) {
 </div>
         
 
-function AnnouncementsPage() {
-  const announcements = [
-    {
-      title: "📢 Barangay Assembly",
-      message:
-        "Join us for the upcoming barangay assembly and community meeting.",
-      date: "Today • 8:00 AM",
-    },
-    {
-      title: "💧 Water Interruption Advisory",
-      message:
-        "Please be advised of a scheduled water service interruption.",
-      date: "Tomorrow",
-    },
-  ];
-
-  return (
-    <div style={styles.section}>
-      <h2 style={styles.sectionTitle}>📢 Announcements</h2>
-
-      {announcements.map((announcement, index) => (
-        <div key={index} style={styles.feedCard}>
-          <h4>{announcement.title}</h4>
-
-          <p>{announcement.message}</p>
-
-          <small>{announcement.date}</small>
-        </div>
-      ))}
-    </div>
-  );
-}
+      </div>
 
       {/* Active Requests */}
       <div style={styles.sectionHeader}>
