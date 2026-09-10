@@ -1844,6 +1844,70 @@ function ResidentDashboard({
   );
 }
 
+function ResidentAnnouncements() {
+  const announcements = [
+    {
+      category: "INFRASTRUCTURE",
+      title: "Main Street Water Main Repair Schedule",
+      description:
+        "Emergency repairs on the main water line will begin tomorrow. Expect partial lane closures.",
+      date: "Today • 8:00 AM",
+    },
+    {
+      category: "PUBLIC HEALTH",
+      title: "Annual Flu Vaccination Drive Begins Next Week",
+      description:
+        "The health center will provide free vaccination services to residents.",
+      date: "Oct 12, 2023",
+    },
+    {
+      category: "EVENTS",
+      title: "Barangay Festival",
+      description:
+        "Join the community for the annual barangay festival.",
+      date: "Oct 15 • 10 AM",
+    },
+    {
+      category: "SERVICES",
+      title: "Holiday Waste Collection Schedule",
+      description:
+        "Trash and recycling collection schedules will be adjusted during the holiday.",
+      date: "Oct 20, 2023",
+    },
+  ];
+
+  return (
+    <>
+      <h1 style={styles.heading}>Announcements</h1>
+
+      <p style={styles.description}>
+        Stay updated with the latest news, alerts, and events in your area.
+      </p>
+
+      <div style={styles.filterButtons}>
+        <button style={styles.activeFilter}>All</button>
+        <button style={styles.filterButton}>Public Health</button>
+        <button style={styles.filterButton}>Infrastructure</button>
+        <button style={styles.filterButton}>Events</button>
+      </div>
+
+      <div style={styles.announcementGrid}>
+        {announcements.map((item, index) => (
+          <div style={styles.announcementCard} key={index}>
+            <small>{item.category}</small>
+
+            <h2>{item.title}</h2>
+
+            <p>{item.description}</p>
+
+            <small>{item.date}</small>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+}
+
 function SimplePage({ title }) {
   return (
     <div style={styles.section}>
