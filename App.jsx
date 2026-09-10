@@ -1453,7 +1453,7 @@ function RequestRow({
   );
 }
 
-function Announcements({ openModal, role = "Resident" }) {
+function Announcements({ openModal }) {
   const [title, setTitle] = useState("");
   const [category, setCategory] =
     useState("General");
@@ -1469,62 +1469,6 @@ function Announcements({ openModal, role = "Resident" }) {
     setTitle("");
     setBody("");
   };
-
-  // Residents can only VIEW announcements.
-  if (role === "Resident") {
-    const announcements = [
-      {
-        title: "Water Main Maintenance",
-        category: "Maintenance",
-        date: "2 hrs ago",
-        content: "Scheduled water main maintenance in Zone 3 East."
-      },
-      {
-        title: "Monthly Town Hall Meeting",
-        category: "Community Event",
-        date: "Tomorrow • 9:00 AM",
-        content: "Residents are invited to attend the monthly town hall meeting."
-      },
-      {
-        title: "Community Center Renovation",
-        category: "General",
-        date: "Upcoming",
-        content: "The community center will undergo renovation. Please check future updates."
-      }
-    ];
-
-    return (
-      <>
-        <div style={styles.headingRow}>
-          <div>
-            <h1 style={styles.heading}>Announcements</h1>
-            <p style={styles.description}>
-              View official announcements and updates from the barangay.
-            </p>
-          </div>
-        </div>
-
-        <div style={styles.cardGrid}>
-          {announcements.map((announcement, index) => (
-            <div style={styles.card} key={index}>
-              <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
-                <h3 style={{ marginTop: 0, marginBottom: 8 }}>
-                  📢 {announcement.title}
-                </h3>
-                <span style={styles.badge}>{announcement.category}</span>
-              </div>
-              <p style={{ color: "#64748b", margin: "0 0 12px" }}>
-                {announcement.date}
-              </p>
-              <p style={{ margin: 0 }}>
-                {announcement.content}
-              </p>
-            </div>
-          ))}
-        </div>
-      </>
-    );
-  }
 
   return (
     <>
@@ -2112,7 +2056,6 @@ function App() {
     content = (
       <Announcements
         openModal={openModal}
-        role={role}
       />
     );
   } else if (page === "Blotter Reports") {
