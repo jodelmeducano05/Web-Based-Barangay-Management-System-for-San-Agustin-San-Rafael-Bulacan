@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+aaimport React, { useState } from "react";
 
 const LOGO = "/barangay-logo.png";
 
@@ -1758,8 +1758,6 @@ function ResidentDashboard({ setPage, openModal }) {
 
         <div
           style={styles.card}
-          onClick={() => setPage("Announcements")}
-        >
           <h3>📢</h3>
           <h3>Announcements</h3>
           <p>View the latest community announcements.</p>
