@@ -1453,7 +1453,7 @@ function RequestRow({
   );
 }
 
-function Announcements({ openModal, role }) {
+function Announcements({ openModal, role = "Resident" }) {
   const [title, setTitle] = useState("");
   const [category, setCategory] =
     useState("General");
