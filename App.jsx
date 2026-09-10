@@ -1488,7 +1488,7 @@ function Announcements({ openModal }) {
           onClick={publish}
         >
           ▶ Publish Now
-        </button>
+        </button>}
       </div>
 
       <div
