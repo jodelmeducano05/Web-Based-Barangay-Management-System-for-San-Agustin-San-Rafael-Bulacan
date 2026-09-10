@@ -1763,12 +1763,13 @@ function ResidentDashboard({ setPage, openModal }) {
     Latest community announcements will appear here.
   </p>
 
-  <div>
-    <h4>Barangay Announcement</h4>
-    <p>
-      Walang bagong announcement sa ngayon.
-    </p>
-  </div>
+  <button
+    style={styles.linkButton}
+    onClick={() => setPage("Announcements")}
+  >
+    View All
+  </button>
+</div>
 
 
       {/* Active Requests */}
