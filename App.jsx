@@ -1842,7 +1842,7 @@ function ResidentDashboard({ setPage, openModal }) {
         </p>
         <small>Tomorrow</small>
       </div>
-    </>
+    </div>
   );
 }
 
