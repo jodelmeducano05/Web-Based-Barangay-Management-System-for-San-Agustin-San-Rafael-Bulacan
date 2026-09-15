@@ -1,3089 +1,490 @@
 import React, { useState } from "react";
 
-const LOGO = "/barangay-logo.png";
-
-const styles = {
-  app: {
-    minHeight: "100vh",
-    background: "#f5f7fb",
-    fontFamily: "Inter, Arial, Helvetica, sans-serif",
-    color: "#172554",
-  },
-
-  loginPage: {
-    minHeight: "100vh",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    background:
-      "linear-gradient(135deg, #062d63 0%, #0b4b91 55%, #0fa968 100%)",
-    padding: 20,
-  },
-
-  loginCard: {
-    width: "100%",
-    maxWidth: 460,
-    background: "#fff",
-    borderRadius: 24,
-    padding: 35,
-    boxShadow: "0 25px 70px rgba(0,0,0,.25)",
-  },
-
-  loginLogo: {
-    width: 95,
-    height: 95,
-    objectFit: "contain",
-    display: "block",
-    margin: "0 auto 15px",
-  },
-
-  center: {
-    textAlign: "center",
-  },
-
-  title: {
-    margin: "5px 0",
-    fontSize: 28,
-    fontWeight: 800,
-    color: "#092f63",
-  },
-
-  subtitle: {
-    color: "#64748b",
-    marginBottom: 25,
-  },
-
-  input: {
-    width: "100%",
-    padding: "13px 15px",
-    border: "1px solid #d7deea",
-    borderRadius: 10,
-    fontSize: 14,
-    outline: "none",
-    marginTop: 7,
-    boxSizing: "border-box",
-  },
-
-  label: {
-    fontSize: 13,
-    fontWeight: 700,
-    color: "#334155",
-  },
-
-  formGroup: {
-    marginBottom: 17,
-  },
-
-  primaryButton: {
-    width: "100%",
-    padding: "14px",
-    border: "none",
-    borderRadius: 10,
-    background: "#0b4b91",
-    color: "white",
-    fontWeight: 800,
-    cursor: "pointer",
-    fontSize: 15,
-  },
-
-  googleButton: {
-    width: "100%",
-    padding: "13px",
-    border: "1px solid #d7deea",
-    borderRadius: 10,
-    background: "white",
-    color: "#334155",
-    fontWeight: 700,
-    cursor: "pointer",
-    fontSize: 14,
-    marginTop: 12,
-  },
-
-  linkButton: {
-    border: "none",
-    background: "transparent",
-    color: "#0b5cab",
-    cursor: "pointer",
-    fontWeight: 700,
-  },
-
-  roleGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(3, 1fr)",
-    gap: 8,
-    marginBottom: 18,
-  },
-
-  roleButton: {
-    padding: "12px 5px",
-    borderRadius: 10,
-    cursor: "pointer",
-    fontWeight: 700,
-    fontSize: 12,
-    border: "1px solid #d7deea",
-    background: "#f8fafc",
-  },
-
-  layout: {
-    minHeight: "100vh",
-    display: "flex",
-  },
-
-  sidebar: {
-    width: 245,
-    minHeight: "100vh",
-    background: "linear-gradient(180deg,#061b45,#092b63)",
-    color: "white",
-    padding: 20,
-    boxSizing: "border-box",
-    position: "fixed",
-    left: 0,
-    top: 0,
-    bottom: 0,
-  },
-
-  brand: {
-    display: "flex",
-    alignItems: "center",
-    gap: 10,
-    marginBottom: 35,
-  },
-
-  brandLogo: {
-    width: 52,
-    height: 52,
-    objectFit: "contain",
-    background: "white",
-    borderRadius: "50%",
-  },
-
-  brandText: {
-    fontWeight: 800,
-    lineHeight: 1.2,
-    fontSize: 15,
-  },
-
-  menuButton: {
-    width: "100%",
-    border: "none",
-    padding: "12px 14px",
-    marginBottom: 7,
-    borderRadius: 9,
-    color: "#dbeafe",
-    background: "transparent",
-    textAlign: "left",
-    cursor: "pointer",
-    fontWeight: 700,
-  },
-
-  activeMenu: {
-    background: "#16d66d",
-    color: "#062e24",
-  },
-
-  bottomMenu: {
-    position: "absolute",
-    bottom: 20,
-    left: 20,
-    right: 20,
-  },
-
-  main: {
-    marginLeft: 245,
-    width: "calc(100% - 245px)",
-    minHeight: "100vh",
-    boxSizing: "border-box",
-  },
-
-  topbar: {
-    height: 70,
-    background: "#fff",
-    borderBottom: "1px solid #e5eaf2",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: "0 30px",
-    boxSizing: "border-box",
-  },
-
-  search: {
-    width: 330,
-    maxWidth: "45%",
-    padding: "11px 15px",
-    borderRadius: 20,
-    border: "1px solid #e2e8f0",
-    outline: "none",
-  },
-
-  profile: {
-    display: "flex",
-    alignItems: "center",
-    gap: 10,
-    fontWeight: 700,
-  },
-
-  avatar: {
-    width: 38,
-    height: 38,
-    borderRadius: "50%",
-    background: "#e2e8f0",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  content: {
-    padding: 30,
-  },
-
-  headingRow: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 15,
-    marginBottom: 25,
-  },
-
-  heading: {
-    margin: 0,
-    fontSize: 28,
-    color: "#173b76",
-  },
-
-  description: {
-    margin: "7px 0 0",
-    color: "#718096",
-  },
-
-  button: {
-    border: "none",
-    borderRadius: 9,
-    padding: "11px 16px",
-    background: "#0b4b91",
-    color: "#fff",
-    cursor: "pointer",
-    fontWeight: 800,
-  },
-
-  cards: {
-    display: "grid",
-    gridTemplateColumns:
-      "repeat(auto-fit,minmax(210px,1fr))",
-    gap: 18,
-    marginBottom: 25,
-  },
-
-  card: {
-    background: "#fff",
-    borderRadius: 15,
-    padding: 20,
-    border: "1px solid #e6ebf2",
-    boxShadow: "0 5px 18px rgba(15,23,42,.04)",
-  },
-
-  cardTitle: {
-    fontSize: 12,
-    fontWeight: 800,
-    color: "#64748b",
-    textTransform: "uppercase",
-  },
-
-  number: {
-    fontSize: 31,
-    fontWeight: 900,
-    margin: "8px 0",
-    color: "#163d78",
-  },
-
-  small: {
-    fontSize: 12,
-    color: "#64748b",
-  },
-
-  section: {
-    background: "#fff",
-    borderRadius: 15,
-    padding: 20,
-    border: "1px solid #e6ebf2",
-    marginBottom: 22,
-  },
-
-  sectionTitle: {
-    margin: "0 0 17px",
-    fontSize: 17,
-    color: "#173b76",
-  },
-
-  tableWrap: {
-    overflowX: "auto",
-  },
-
-  table: {
-    width: "100%",
-    borderCollapse: "collapse",
-    fontSize: 13,
-  },
-
-  th: {
-    textAlign: "left",
-    padding: 12,
-    background: "#f8fafc",
-    color: "#64748b",
-    fontSize: 11,
-  },
-
-  td: {
-    padding: 13,
-    borderBottom: "1px solid #edf1f5",
-  },
-
-  badge: {
-    display: "inline-block",
-    padding: "5px 9px",
-    borderRadius: 20,
-    fontSize: 11,
-    fontWeight: 800,
-  },
-
-  greenBadge: {
-    background: "#dcfce7",
-    color: "#15803d",
-  },
-
-  blueBadge: {
-    background: "#dbeafe",
-    color: "#1d4ed8",
-  },
-
-  redBadge: {
-    background: "#fee2e2",
-    color: "#dc2626",
-  },
-
-  yellowBadge: {
-    background: "#fef3c7",
-    color: "#a16207",
-  },
-
-  modalBg: {
-    position: "fixed",
-    inset: 0,
-    background: "rgba(2,15,40,.55)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
-    zIndex: 50,
-  },
-
-  modal: {
-    background: "#fff",
-    width: "100%",
-    maxWidth: 500,
-    borderRadius: 18,
-    padding: 25,
-    boxShadow: "0 25px 70px rgba(0,0,0,.25)",
-  },
-
-  textarea: {
-    width: "100%",
-    minHeight: 120,
-    resize: "vertical",
-    padding: 13,
-    border: "1px solid #d7deea",
-    borderRadius: 10,
-    boxSizing: "border-box",
-    fontFamily: "inherit",
-  },
-
-  actionRow: {
-    display: "flex",
-    gap: 10,
-    justifyContent: "flex-end",
-    marginTop: 20,
-  },
-
-  secondaryButton: {
-    border: "1px solid #d7deea",
-    background: "#fff",
-    color: "#334155",
-    borderRadius: 9,
-    padding: "10px 15px",
-    cursor: "pointer",
-    fontWeight: 700,
-  },
-
-  /* =========================
-     RESIDENT STYLES
-  ========================= */
-
-  cardGrid: {
-    display: "grid",
-    gridTemplateColumns:
-      "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: 18,
-    marginBottom: 25,
-  },
-
-  sectionHeader: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: 25,
-    marginBottom: 12,
-  },
-
-  tableCard: {
-    background: "#fff",
-    borderRadius: 15,
-    padding: 20,
-    border: "1px solid #e6ebf2",
-    boxShadow: "0 5px 18px rgba(15,23,42,.04)",
-    overflowX: "auto",
-    marginBottom: 25,
-  },
-
-  pending: {
-    display: "inline-block",
-    padding: "5px 9px",
-    borderRadius: 20,
-    fontSize: 11,
-    fontWeight: 800,
-    background: "#fef3c7",
-    color: "#a16207",
-  },
-
-  approved: {
-    display: "inline-block",
-    padding: "5px 9px",
-    borderRadius: 20,
-    fontSize: 11,
-    fontWeight: 800,
-    background: "#dcfce7",
-    color: "#15803d",
-  },
-
-  feedCard: {
-    background: "#fff",
-    borderRadius: 15,
-    padding: 18,
-    border: "1px solid #e6ebf2",
-    marginBottom: 15,
-    boxShadow: "0 5px 18px rgba(15,23,42,.04)",
-  },
-
-  filterButtons: {
-    display: "flex",
-    gap: 10,
-    flexWrap: "wrap",
-    margin: "20px 0",
-  },
-
-  filterButton: {
-    border: "1px solid #d7deea",
-    background: "#fff",
-    color: "#475569",
-    padding: "9px 15px",
-    borderRadius: 20,
-    cursor: "pointer",
-    fontWeight: 700,
-  },
-
-  activeFilter: {
-    border: "none",
-    background: "#0b4b91",
-    color: "#fff",
-    padding: "9px 15px",
-    borderRadius: 20,
-    cursor: "pointer",
-    fontWeight: 700,
-  },
-
-  announcementGrid: {
-    display: "grid",
-    gridTemplateColumns:
-      "repeat(auto-fit, minmax(260px, 1fr))",
-    gap: 18,
-  },
-
-  announcementCard: {
-    background: "#fff",
-    borderRadius: 15,
-    padding: 20,
-    border: "1px solid #e6ebf2",
-    boxShadow: "0 5px 18px rgba(15,23,42,.04)",
-  },
-
-  announcementCategory: {
-    display: "inline-block",
-    padding: "5px 9px",
-    borderRadius: 20,
-    background: "#dbeafe",
-    color: "#1d4ed8",
-    fontSize: 10,
-    fontWeight: 800,
-    marginBottom: 10,
-  },
-
-  residentActionCard: {
-    cursor: "pointer",
-    transition: "transform .15s ease",
-  },
-};
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
-function Login({ onLogin }) {
-  const [role, setRole] = useState("Resident");
+const BARANGAY = "SAN AGUSTINE, SAN RAFAEL, BULACAN";
+
+const INITIAL_USERS = [
+  { email: "resident@gmail.com", password: "123", role: "Resident" },
+  { email: "captain@gmail.com", password: "123", role: "Captain" },
+  { email: "secretary@gmail.com", password: "123", role: "Secretary" },
+];
+
+export default function App() {
+  const [users, setUsers] = useState(INITIAL_USERS);
+  const [user, setUser] = useState(null);
+  const [stage, setStage] = useState("login");
+  const [selectedModule, setSelectedModule] = useState(null);
+  const [activePage, setActivePage] = useState("Dashboard");
+  const [toast, setToast] = useState(null);
+
+  const [documents, setDocuments] = useState([
+    { id: "DOC-001", resident: "Juan Dela Cruz", type: "Barangay Clearance", date: "September 14, 2026", status: "Pending" },
+    { id: "DOC-002", resident: "Maria Santos", type: "Certificate of Residency", date: "September 13, 2026", status: "Approved" },
+    { id: "DOC-003", resident: "【entity-Pedro Reyes¦canonical_name=Pedro Reyes】", type: "Certificate of Indigency", date: "September 12, 2026", status: "Processing" },
+  ]);
+  const [announcements, setAnnouncements] = useState([
+    { id: 1, title: "Barangay General Assembly", date: "September 20, 2026", description: "All residents are invited to attend the barangay general assembly at Brgy Hall of SAN AGUSTINE." },
+    { id: 2, title: "Clean-up Drive", date: "September 22, 2026", description: "Community clean-up drive will be held at the covered court of SAN AGUSTINE." },
+    { id: 3, title: "Health Check-up", date: "September 25, 2026", description: "Free medical check-up for residents of SAN AGUSTINE." },
+  ]);
+  const [blotters, setBlotters] = useState([
+    { id: "BR-0012", complainant: "Juan Dela Cruz", incident: "Noise Complaint", date: "September 14, 2026", status: "Under Review" },
+    { id: "BR-0011", complainant: "Maria Santos", incident: "Dispute", date: "September 13, 2026", status: "Resolved" },
+    { id: "BR-0010", complainant: "【entity-Pedro Reyes¦canonical_name=Pedro Reyes】", incident: "Property Concern", date: "September 12, 2026", status: "Pending" },
+  ]);
+
+  const showToast = (msg) => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  const handleLogin = (email, password) => {
+    const found = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
+    if (!found) {
+      showToast("Mali ang email o password!");
+      return;
+    }
+    setUser(found);
+    setStage("modules");
+    showToast(`Welcome ${found.role} - ${found.email}`);
+  };
+
+  const handleGoogleLogin = () => {
+    const googleUser = { email: "Google User", role: "Resident", password: "google" };
+    setUser(googleUser);
+    setStage("modules");
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    setSelectedModule(null);
+    setActivePage("Dashboard");
+    setStage("login");
+  };
+
+  const handleModuleSelect = (modName) => {
+    const modRole = modName.replace(" Dashboard", "");
+    if (user.role !== modRole) {
+      showToast(`⛔ ACCESS DENIED: ${user.role} ka lang. Hindi mo pwedeng buksan ang ${modRole} Dashboard!`);
+      return;
+    }
+    setSelectedModule(modName);
+    setStage("app");
+    setActivePage("Dashboard");
+    showToast(`Opened ${modName} - ${BARANGAY}`);
+  };
+
+  if (stage === "login") return <Login onLogin={handleLogin} onGoogleLogin={handleGoogleLogin} users={users} setUsers={setUsers} toast={toast} showToast={showToast} />;
+  if (stage === "modules") return <DashboardModules onSelect={handleModuleSelect} logout={handleLogout} user={user} toast={toast} showToast={showToast} />;
+
+  return (
+    <>
+      {toast && <div style={styles.toast}>{toast}</div>}
+      <DashboardLayout
+        user={user}
+        selectedModule={selectedModule}
+        activePage={activePage}
+        setActivePage={setActivePage}
+        logout={handleLogout}
+        backToModules={() => setStage("modules")}
+        documents={documents} setDocuments={setDocuments}
+        announcements={announcements} setAnnouncements={setAnnouncements}
+        blotters={blotters} setBlotters={setBlotters}
+        showToast={showToast}
+      />
+    </>
+  );
+}
+
+function Login({ onLogin, onGoogleLogin, users, setUsers, showToast }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [mode, setMode] = useState("login");
-  const [message, setMessage] = useState("");
+  const [showForgot, setShowForgot] = useState(false);
+  const [showSignup, setShowSignup] = useState(false);
+  const [signupData, setSignupData] = useState({ name: "", email: "", password: "", role: "Resident" });
 
-  const submit = (e) => {
-    e.preventDefault();
-
-    if (mode === "signup") {
-      setMessage(
-        "Account created successfully! You can now login."
-      );
-      setMode("login");
-      return;
+  const handleSignup = () => {
+    if(!signupData.name || !signupData.email || !signupData.password) return showToast("Kumpletuhin ang form");
+    if(users.find(u => u.email.toLowerCase() === signupData.email.toLowerCase())){
+      return showToast("May account na sa email na yan");
     }
-
-    if (!email || !password) {
-      setMessage(
-        "Please enter your email and password."
-      );
-      return;
-    }
-
-    onLogin(role, email);
-  };
-
-  const googleLogin = () => {
-    onLogin(role, "Google Account");
-  };
+    const newUser = { email: signupData.email, password: signupData.password, role: signupData.role, name: signupData.name };
+    setUsers([...users, newUser]);
+    setShowSignup(false);
+    showToast(`Account created as ${signupData.role}! Pwede ka na mag login.`);
+    setSignupData({ name: "", email: "", password: "", role: "Resident" });
+  }
 
   return (
     <div style={styles.loginPage}>
       <div style={styles.loginCard}>
-        <img
-          src={LOGO}
-          alt="Barangay Logo"
-          style={styles.loginLogo}
-          onError={(e) => {
-            e.currentTarget.style.display = "none";
-          }}
-        />
-
-        <div style={styles.center}>
-          <h1 style={styles.title}>
-            Barangay Management System
-          </h1>
-
-          <p style={styles.subtitle}>
-            San Agustin, San Rafael, Bulacan
-          </p>
+        <div style={styles.logoCircle}>🏛</div>
+        <h1 style={styles.loginTitle}>Barangay Management System</h1>
+        <p style={styles.loginSubtitle}>{BARANGAY}</p>
+        <div style={{background:'#f1f5f9', padding:'10px', borderRadius:'8px', marginBottom:'15px', fontSize:'11px', textAlign:'left'}}>
+            <b>Demo Accounts (password: 123):</b><br/>
+            resident@gmail.com - Resident<br/>
+            captain@gmail.com - Captain<br/>
+            secretary@gmail.com - Secretary
         </div>
-
-        <div style={styles.roleGrid}>
-          {["Resident", "Captain", "Secretary"].map(
-            (item) => (
-              <button
-                key={item}
-                type="button"
-                onClick={() => {
-                  setRole(item);
-                  setMessage("");
-                }}
-                style={{
-                  ...styles.roleButton,
-                  ...(role === item
-                    ? {
-                        background: "#16d66d",
-                        borderColor: "#16d66d",
-                        color: "#063b28",
-                      }
-                    : {}),
-                }}
-              >
-                {item}
-              </button>
-            )
-          )}
-        </div>
-
-        <form onSubmit={submit}>
-          {mode === "signup" && (
-            <div style={styles.formGroup}>
-              <label style={styles.label}>
-                Full Name
-              </label>
-
-              <input
-                style={styles.input}
-                placeholder="Enter your full name"
-              />
-            </div>
-          )}
-
-          <div style={styles.formGroup}>
-            <label style={styles.label}>
-              Email Address
-            </label>
-
-            <input
-              type="email"
-              style={styles.input}
-              value={email}
-              onChange={(e) =>
-                setEmail(e.target.value)
-              }
-              placeholder="you@example.com"
-            />
+        <form onSubmit={(e) => { e.preventDefault(); if (!email || !password) return showToast("Please enter email and password"); onLogin(email, password); }}>
+          <label style={styles.label}>Email Address</label>
+          <input type="email" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} style={styles.input} />
+          <label style={styles.label}>Password</label>
+          <input type="password" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} style={styles.input} />
+          <div style={styles.forgotContainer}>
+            <button type="button" style={styles.linkButton} onClick={() => setShowForgot(true)}>Forgot Password?</button>
           </div>
-
-          {mode !== "forgot" && (
-            <div style={styles.formGroup}>
-              <label style={styles.label}>
-                Password
-              </label>
-
-              <input
-                type="password"
-                style={styles.input}
-                value={password}
-                onChange={(e) =>
-                  setPassword(e.target.value)
-                }
-                placeholder="Enter password"
-              />
-            </div>
-          )}
-
-          {mode === "forgot" ? (
-            <>
-              <button
-                type="button"
-                style={styles.primaryButton}
-                onClick={() => {
-                  setMessage(
-                    "Password reset instructions have been sent."
-                  );
-                  setMode("login");
-                }}
-              >
-                Send Reset Link
-              </button>
-
-              <div
-                style={{
-                  ...styles.center,
-                  marginTop: 15,
-                }}
-              >
-                <button
-                  type="button"
-                  style={styles.linkButton}
-                  onClick={() => setMode("login")}
-                >
-                  ← Back to Login
-                </button>
-              </div>
-            </>
-          ) : (
-            <>
-              <button
-                type="submit"
-                style={styles.primaryButton}
-              >
-                {mode === "signup"
-                  ? "Create Account"
-                  : `Login as ${role}`}
-              </button>
-
-              <button
-                type="button"
-                style={styles.googleButton}
-                onClick={googleLogin}
-              >
-                🔵 Continue with Google
-              </button>
-
-              {mode === "login" && (
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    marginTop: 15,
-                    fontSize: 13,
-                  }}
-                >
-                  <button
-                    type="button"
-                    style={styles.linkButton}
-                    onClick={() =>
-                      setMode("forgot")
-                    }
-                  >
-                    Forgot Password?
-                  </button>
-
-                  <button
-                    type="button"
-                    style={styles.linkButton}
-                    onClick={() =>
-                      setMode("signup")
-                    }
-                  >
-                    Sign Up
-                  </button>
-                </div>
-              )}
-
-              {mode === "signup" && (
-                <div
-                  style={{
-                    ...styles.center,
-                    marginTop: 15,
-                    fontSize: 13,
-                  }}
-                >
-                  Already have an account?{" "}
-                  <button
-                    type="button"
-                    style={styles.linkButton}
-                    onClick={() =>
-                      setMode("login")
-                    }
-                  >
-                    Login
-                  </button>
-                </div>
-              )}
-            </>
-          )}
+          <button type="submit" style={styles.loginButton}>Login</button>
         </form>
-
-        {message && (
-          <div
-            style={{
-              marginTop: 18,
-              padding: 12,
-              borderRadius: 9,
-              background: "#eff6ff",
-              color: "#1d4ed8",
-              fontSize: 13,
-            }}
-          >
-            {message}
-          </div>
-        )}
-
-        <p
-          style={{
-            ...styles.center,
-            color: "#94a3b8",
-            fontSize: 11,
-            marginTop: 25,
-          }}
-        >
-          Selected Role: <b>{role}</b>
-        </p>
-      </div>
-    </div>
-  );
-}
-
-/* =========================================================
-   SIDEBAR
-========================================================= */
-
-function Sidebar({
-  role,
-  page,
-  setPage,
-  logout,
-}) {
-  let menu = [];
-
-  if (role === "Captain") {
-    menu = [
-      "Dashboard",
-      "Document Requests",
-      "Announcements",
-      "Blotter Reports",
-    ];
-  } else if (role === "Secretary") {
-    menu = [
-      "Dashboard",
-      "Document Requests",
-      "Announcements",
-      "Blotter Reports",
-    ];
-  } else {
-    menu = [
-      "Dashboard",
-      "My Requests",
-      "Announcements",
-      "My Reports",
-    ];
-  }
-
-  return (
-    <aside style={styles.sidebar}>
-      <div style={styles.brand}>
-        <img
-          src={LOGO}
-          alt=""
-          style={styles.brandLogo}
-          onError={(e) => {
-            e.currentTarget.style.display = "none";
-          }}
-        />
-
-        <div style={styles.brandText}>
-          Barangay
-          <br />
-          Management
-          <br />
-          System
-        </div>
-      </div>
-
-      {menu.map((item) => (
-        <button
-          key={item}
-          style={{
-            ...styles.menuButton,
-            ...(page === item
-              ? styles.activeMenu
-              : {}),
-          }}
-          onClick={() => setPage(item)}
-        >
-          {item === "Dashboard" && "▦ "}
-          {item === "Document Requests" && "▤ "}
-          {item === "Announcements" && "📢 "}
-          {item === "Blotter Reports" && "⚖ "}
-          {item === "My Requests" && "📄 "}
-          {item === "My Reports" && "⚠ "}
-          {item}
+        <div style={styles.divider}><span>OR</span></div>
+        <button style={styles.googleButton} onClick={onGoogleLogin}>
+          <span style={styles.googleIcon}>G</span> Continue as Resident (Google)
         </button>
-      ))}
-
-      <div style={styles.bottomMenu}>
-        <button
-          style={styles.menuButton}
-          onClick={() =>
-            alert("Settings page")
-          }
-        >
-          ⚙ Settings
-        </button>
-
-        <button
-          style={styles.menuButton}
-          onClick={logout}
-        >
-          ⇥ Logout
-        </button>
-      </div>
-    </aside>
-  );
-}
-
-/* =========================================================
-   TOPBAR
-========================================================= */
-
-function Topbar({ role }) {
-  return (
-    <div style={styles.topbar}>
-      <input
-        style={styles.search}
-        placeholder="Search records, names, or IDs..."
-      />
-
-      <div style={styles.profile}>
-        🔔
-        <div style={styles.avatar}>👤</div>
-        <span>{role}</span>
-      </div>
-    </div>
-  );
-}
-
-/* =========================================================
-   STAT CARD
-========================================================= */
-
-function StatCard({
-  title,
-  value,
-  subtitle,
-}) {
-  return (
-    <div style={styles.card}>
-      <div style={styles.cardTitle}>
-        {title}
+        <p style={styles.signupText}>Don't have an account? <button style={styles.linkButton} onClick={() => setShowSignup(true)}>Sign Up</button></p>
       </div>
 
-      <div style={styles.number}>
-        {value}
-      </div>
-
-      <div style={styles.small}>
-        {subtitle}
-      </div>
-    </div>
-  );
-}
-
-/* =========================================================
-   CAPTAIN DASHBOARD
-========================================================= */
-
-function CaptainDashboard({
-  setPage,
-  openModal,
-}) {
-  return (
-    <>
-      <div style={styles.headingRow}>
-        <div>
-          <h1 style={styles.heading}>
-            Good Morning, Captain
-          </h1>
-
-          <p style={styles.description}>
-            Here's an overview of the barangay's
-            administrative status today.
-          </p>
-        </div>
-
-        <div>
-          <button
-            style={{
-              ...styles.secondaryButton,
-              marginRight: 8,
-            }}
-            onClick={() =>
-              alert("Daily report generated.")
-            }
-          >
-            ↓ Print Daily Report
-          </button>
-
-          <button
-            style={styles.button}
-            onClick={() =>
-              openModal("New Record")
-            }
-          >
-            + New Record
-          </button>
-        </div>
-      </div>
-
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>
-          System Overview Active
-        </h3>
-
-        <div style={styles.cards}>
-          <StatCard
-            title="Certificates Issued"
-            value="84"
-            subtitle="This week"
-          />
-
-          <StatCard
-            title="Pending Requests"
-            value="15"
-            subtitle="Require review"
-          />
-
-          <StatCard
-            title="Active Blotters"
-            value="7"
-            subtitle="Currently open cases"
-          />
-        </div>
-      </div>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns:
-            "minmax(0,2fr) minmax(260px,1fr)",
-          gap: 20,
-        }}
-      >
-        <div style={styles.section}>
-          <h3 style={styles.sectionTitle}>
-            Recent Critical Reports
-          </h3>
-
-          <div style={styles.tableWrap}>
-            <table style={styles.table}>
-              <thead>
-                <tr>
-                  <th style={styles.th}>ID</th>
-                  <th style={styles.th}>
-                    CATEGORY
-                  </th>
-                  <th style={styles.th}>
-                    SUBJECT
-                  </th>
-                  <th style={styles.th}>DATE</th>
-                  <th style={styles.th}>STATUS</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                <tr>
-                  <td style={styles.td}>
-                    BL-2023-089
-                  </td>
-
-                  <td style={styles.td}>
-                    Disturbance
-                  </td>
-
-                  <td style={styles.td}>
-                    Noise complaint at Block 4
-                  </td>
-
-                  <td style={styles.td}>
-                    Oct 24
-                  </td>
-
-                  <td style={styles.td}>
-                    <span
-                      style={{
-                        ...styles.badge,
-                        ...styles.redBadge,
-                      }}
-                    >
-                      Unresolved
-                    </span>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td style={styles.td}>
-                    BL-2023-088
-                  </td>
-
-                  <td style={styles.td}>
-                    Property
-                  </td>
-
-                  <td style={styles.td}>
-                    Property damage report
-                  </td>
-
-                  <td style={styles.td}>
-                    Oct 23
-                  </td>
-
-                  <td style={styles.td}>
-                    <span
-                      style={{
-                        ...styles.badge,
-                        ...styles.yellowBadge,
-                      }}
-                    >
-                      Hearing
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <button
-            style={{
-              ...styles.linkButton,
-              marginTop: 15,
-            }}
-            onClick={() =>
-              setPage("Blotter Reports")
-            }
-          >
-            View All →
-          </button>
-        </div>
-
-        <div style={styles.section}>
-          <h3 style={styles.sectionTitle}>
-            System Activity
-          </h3>
-
-          <p style={styles.small}>
-            🟢 Just now
-          </p>
-
-          <p>
-            Admin approved Certificate Request.
-          </p>
-
-          <hr />
-
-          <p style={styles.small}>
-            🔴 15 minutes ago
-          </p>
-
-          <p>
-            New blotter report was logged.
-          </p>
-
-          <hr />
-
-          <p style={styles.small}>
-            🔵 1 hour ago
-          </p>
-
-          <p>
-            Resident record updated.
-          </p>
-        </div>
-      </div>
-    </>
-  );
-}
-
-/* =========================================================
-   SECRETARY DASHBOARD
-========================================================= */
-
-function SecretaryDashboard({
-  setPage,
-  openModal,
-}) {
-  return (
-    <>
-      <div style={styles.headingRow}>
-        <div>
-          <h1 style={styles.heading}>
-            Secretary's Dashboard
-          </h1>
-
-          <p style={styles.description}>
-            Overview of barangay operations and
-            pending tasks.
-          </p>
-        </div>
-
-        <div>
-          <button
-            style={{
-              ...styles.secondaryButton,
-              marginRight: 8,
-            }}
-            onClick={() =>
-              alert("Report generated.")
-            }
-          >
-            ↓ Generate Report
-          </button>
-
-          <button
-            style={styles.button}
-            onClick={() =>
-              openModal("New Record")
-            }
-          >
-            + New Record
-          </button>
-        </div>
-      </div>
-
-      <div style={styles.cards}>
-        <StatCard
-          title="Pending Docs"
-          value="34"
-          subtitle="12 require urgent review"
-        />
-
-        <StatCard
-          title="Blotter Reports"
-          value="8"
-          subtitle="3 unresolved cases"
-        />
-
-        <StatCard
-          title="Scheduled Hearings"
-          value="5"
-          subtitle="Next hearing: Tomorrow"
-        />
-      </div>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns:
-            "minmax(0,2fr) minmax(250px,1fr)",
-          gap: 20,
-        }}
-      >
-        <div style={styles.section}>
-          <h3 style={styles.sectionTitle}>
-            Document Request Queue
-          </h3>
-
-          <p style={styles.small}>
-            Manage and process incoming citizen
-            requests.
-          </p>
-
-          <div style={styles.tableWrap}>
-            <table style={styles.table}>
-              <thead>
-                <tr>
-                  <th style={styles.th}>
-                    REQUEST ID
-                  </th>
-
-                  <th style={styles.th}>
-                    RESIDENT NAME
-                  </th>
-
-                  <th style={styles.th}>
-                    DOCUMENT TYPE
-                  </th>
-
-                  <th style={styles.th}>
-                    STATUS
-                  </th>
-
-                  <th style={styles.th}>
-                    ACTION
-                  </th>
-                </tr>
-              </thead>
-
-              <tbody>
-                <SecretaryRow
-                  id="REQ-2023-045"
-                  name="Maria Clara"
-                  doc="Barangay Clearance"
-                  status="New"
-                />
-
-                <SecretaryRow
-                  id="REQ-2023-044"
-                  name="Jose Rizal"
-                  doc="Certificate of Indigency"
-                  status="In Progress"
-                />
-
-                <SecretaryRow
-                  id="REQ-2023-043"
-                  name="Andres Bonifacio"
-                  doc="Business Permit"
-                  status="Missing Docs"
-                />
-
-                <SecretaryRow
-                  id="REQ-2023-042"
-                  name="Emilia Aguinaldo"
-                  doc="Barangay Clearance"
-                  status="New"
-                />
-              </tbody>
-            </table>
-          </div>
-
-          <button
-            style={{
-              ...styles.linkButton,
-              marginTop: 15,
-            }}
-            onClick={() =>
-              setPage("Document Requests")
-            }
-          >
-            View All Requests →
-          </button>
-        </div>
-
-        <div>
-          <div
-            style={{
-              ...styles.section,
-              background:
-                "linear-gradient(135deg,#0b4b91,#173e82)",
-              color: "white",
-            }}
-          >
-            <h3 style={{ marginTop: 0 }}>
-              Upcoming Hearing
-            </h3>
-
-            <div
-              style={{
-                background: "white",
-                color: "#173b76",
-                padding: 15,
-                borderRadius: 10,
-              }}
-            >
-              <b>OCT 24</b>
-
-              <p style={{ margin: "8px 0" }}>
-                Case #BL-892
-              </p>
-
-              <small>
-                10:00 AM • Barangay Hall
-              </small>
+      {showForgot && (
+        <div style={styles.modalOverlay} onClick={() => setShowForgot(false)}>
+          <div style={styles.modal} onClick={e => e.stopPropagation()}>
+            <h3>Reset Password - {BARANGAY}</h3>
+            <p style={{color:'#64748b', fontSize:'13px'}}>Enter your email to receive reset link</p>
+            <input style={styles.input} placeholder="your@email.com" />
+            <div style={{display:'flex', gap:'10px', marginTop:'15px'}}>
+              <button style={styles.primaryButton} onClick={() => { setShowForgot(false); showToast("Reset link sent!"); }}>Send Link</button>
+              <button style={styles.secondaryButton} onClick={() => setShowForgot(false)}>Cancel</button>
             </div>
-
-            <button
-              style={{
-                ...styles.secondaryButton,
-                width: "100%",
-                marginTop: 12,
-              }}
-              onClick={() =>
-                alert(
-                  "Hearing details opened."
-                )
-              }
-            >
-              View Details
-            </button>
-          </div>
-
-          <div style={styles.section}>
-            <h3 style={styles.sectionTitle}>
-              Recent Actions
-            </h3>
-
-            <p>
-              ✓ Approved Barangay Clearance
-            </p>
-
-            <p>
-              ✎ Updated Resident Record
-            </p>
-
-            <p>
-              ⚖ Logged new Blotter Report
-            </p>
-
-            <p>
-              ▣ Printed Certificate
-            </p>
           </div>
         </div>
-      </div>
-    </>
-  );
-}
-
-/* =========================================================
-   SECRETARY ROW
-========================================================= */
-
-function SecretaryRow({
-  id,
-  name,
-  doc,
-  status,
-}) {
-  let badge = styles.blueBadge;
-
-  if (status === "New") {
-    badge = styles.greenBadge;
-  }
-
-  if (status === "Missing Docs") {
-    badge = styles.redBadge;
-  }
-
-  return (
-    <tr>
-      <td style={styles.td}>{id}</td>
-
-      <td style={styles.td}>
-        <b>{name}</b>
-      </td>
-
-      <td style={styles.td}>{doc}</td>
-
-      <td style={styles.td}>
-        <span
-          style={{
-            ...styles.badge,
-            ...badge,
-          }}
-        >
-          {status}
-        </span>
-      </td>
-
-      <td style={styles.td}>
-        <button
-          style={{
-            ...styles.button,
-            padding: "7px 13px",
-            fontSize: 12,
-          }}
-          onClick={() =>
-            alert(`Reviewing ${id}`)
-          }
-        >
-          Review
-        </button>
-      </td>
-    </tr>
-  );
-}
-
-/* =========================================================
-   DOCUMENT REQUESTS
-   CAPTAIN + SECRETARY ONLY
-========================================================= */
-
-function DocumentRequests({ openModal }) {
-  return (
-    <>
-      <div style={styles.headingRow}>
-        <div>
-          <h1 style={styles.heading}>
-            Document Requests
-          </h1>
-
-          <p style={styles.description}>
-            Manage and process pending civic
-            documents.
-          </p>
-        </div>
-
-        <div>
-          <button
-            style={{
-              ...styles.secondaryButton,
-              marginRight: 8,
-            }}
-            onClick={() =>
-              alert("Filter opened.")
-            }
-          >
-            ⚲ Filter
-          </button>
-
-          <button
-            style={styles.button}
-            onClick={() =>
-              alert("Export completed.")
-            }
-          >
-            ↓ Export
-          </button>
-        </div>
-      </div>
-
-      <div style={styles.cards}>
-        <StatCard
-          title="Total Pending"
-          value="142"
-          subtitle="All requests"
-        />
-
-        <StatCard
-          title="Urgent Reviews"
-          value="18"
-          subtitle="Needs immediate action"
-        />
-
-        <StatCard
-          title="Ready for Pickup"
-          value="34"
-          subtitle="Completed documents"
-        />
-      </div>
-
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>
-          Request Queue
-        </h3>
-
-        <div style={styles.tableWrap}>
-          <table style={styles.table}>
-            <thead>
-              <tr>
-                <th style={styles.th}>
-                  REQ ID
-                </th>
-
-                <th style={styles.th}>
-                  RESIDENT NAME
-                </th>
-
-                <th style={styles.th}>
-                  DOCUMENT TYPE
-                </th>
-
-                <th style={styles.th}>
-                  DATE SUBMITTED
-                </th>
-
-                <th style={styles.th}>
-                  STATUS
-                </th>
-
-                <th style={styles.th}>
-                  ACTIONS
-                </th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <RequestRow
-                id="REQ-0892"
-                name="Maria Clara Los Santos"
-                doc="Certificate of Residency"
-                date="Oct 24, 09:15 AM"
-                status="Pending"
-              />
-
-              <RequestRow
-                id="REQ-0891"
-                name="Juan Dela Cruz"
-                doc="Certificate of Indigency"
-                date="Oct 22, 14:30 PM"
-                status="Urgent"
-              />
-
-              <RequestRow
-                id="REQ-0890"
-                name="Elena Ramos"
-                doc="Business Permit"
-                date="Oct 24, 08:45 AM"
-                status="Pending"
-              />
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </>
-  );
-}
-
-/* =========================================================
-   REQUEST ROW
-========================================================= */
-
-function RequestRow({
-  id,
-  name,
-  doc,
-  date,
-  status,
-}) {
-  return (
-    <tr>
-      <td style={styles.td}>{id}</td>
-
-      <td style={styles.td}>
-        <b>{name}</b>
-      </td>
-
-      <td style={styles.td}>{doc}</td>
-
-      <td style={styles.td}>{date}</td>
-
-      <td style={styles.td}>
-        <span
-          style={{
-            ...styles.badge,
-            ...(status === "Urgent"
-              ? styles.redBadge
-              : styles.blueBadge),
-          }}
-        >
-          {status}
-        </span>
-      </td>
-
-      <td style={styles.td}>
-        <button
-          style={{
-            ...styles.button,
-            padding: "7px 14px",
-            fontSize: 12,
-          }}
-          onClick={() =>
-            alert(`Review ${id}`)
-          }
-        >
-          Review
-        </button>
-      </td>
-    </tr>
-  );
-}
-
-/* =========================================================
-   CAPTAIN + SECRETARY ANNOUNCEMENTS
-   THIS DESIGN IS NOT USED BY RESIDENT
-========================================================= */
-
-function Announcements({ openModal }) {
-  const [title, setTitle] = useState("");
-  const [category, setCategory] =
-    useState("General");
-  const [body, setBody] = useState("");
-
-  const publish = () => {
-    if (!title || !body) {
-      alert(
-        "Please complete the announcement."
-      );
-      return;
-    }
-
-    alert(
-      "Announcement published successfully!"
-    );
-
-    setTitle("");
-    setBody("");
-  };
-
-  return (
-    <>
-      <div style={styles.headingRow}>
-        <div>
-          <h1 style={styles.heading}>
-            Announcements
-          </h1>
-
-          <p style={styles.description}>
-            Draft and publish official
-            communications to barangay residents.
-          </p>
-        </div>
-
-        <button
-          style={styles.button}
-          onClick={publish}
-        >
-          ▶ Publish Now
-        </button>
-      </div>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns:
-            "minmax(0,2fr) minmax(250px,1fr)",
-          gap: 20,
-        }}
-      >
-        <div style={styles.section}>
-          <h3 style={styles.sectionTitle}>
-            New Public Announcement
-          </h3>
-
-          <div style={styles.formGroup}>
-            <label style={styles.label}>
-              Announcement Title
-            </label>
-
-            <input
-              style={styles.input}
-              value={title}
-              onChange={(e) =>
-                setTitle(e.target.value)
-              }
-              placeholder="e.g. Scheduled Power Interruption"
-            />
-          </div>
-
-          <div style={styles.formGroup}>
-            <label style={styles.label}>
-              Category
-            </label>
-
-            <select
-              style={styles.input}
-              value={category}
-              onChange={(e) =>
-                setCategory(e.target.value)
-              }
-            >
-              <option>General</option>
-              <option>Emergency</option>
-              <option>Community Event</option>
-              <option>Maintenance</option>
+      )}
+      {showSignup && (
+        <div style={styles.modalOverlay} onClick={() => setShowSignup(false)}>
+          <div style={styles.modal} onClick={e => e.stopPropagation()}>
+            <h3>Create Account - {BARANGAY}</h3>
+            <p style={{fontSize:'12px', color:'#64748b'}}>Piliin ang role mo. Isang role lang per account.</p>
+            <input style={styles.input} placeholder="Full Name" value={signupData.name} onChange={e=>setSignupData({...signupData, name:e.target.value})} />
+            <input style={styles.input} placeholder="Email" value={signupData.email} onChange={e=>setSignupData({...signupData, email:e.target.value})} />
+            <input style={styles.input} placeholder="Password" type="password" value={signupData.password} onChange={e=>setSignupData({...signupData, password:e.target.value})} />
+            <label style={styles.label}>Select Role</label>
+            <select style={styles.input} value={signupData.role} onChange={e=>setSignupData({...signupData, role:e.target.value})}>
+              <option value="Resident">Resident</option>
+              <option value="Captain">Captain</option>
+              <option value="Secretary">Secretary</option>
             </select>
-          </div>
-
-          <div style={styles.formGroup}>
-            <label style={styles.label}>
-              Content
-            </label>
-
-            <textarea
-              style={styles.textarea}
-              value={body}
-              onChange={(e) =>
-                setBody(e.target.value)
-              }
-              placeholder="Enter the announcement details here..."
-            />
-          </div>
-
-          <div style={styles.actionRow}>
-            <button
-              style={styles.secondaryButton}
-              onClick={() =>
-                alert("Draft saved.")
-              }
-            >
-              Save as Draft
-            </button>
-
-            <button
-              style={styles.button}
-              onClick={publish}
-            >
-              ▶ Publish Now
-            </button>
-          </div>
-        </div>
-
-        <div style={styles.section}>
-          <h3 style={styles.sectionTitle}>
-            Recent Activity
-          </h3>
-
-          <p>
-            <b>Water Main Maintenance</b>
-          </p>
-
-          <small>
-            Zone 3 East • 2 hrs ago
-          </small>
-
-          <hr />
-
-          <p>
-            <b>
-              Monthly Town Hall Meeting
-            </b>
-          </p>
-
-          <small>
-            Tomorrow • 9:00 AM
-          </small>
-
-          <hr />
-
-          <p>
-            <b>
-              Community Center Renovation
-            </b>
-          </p>
-
-          <small>Draft</small>
-        </div>
-      </div>
-    </>
-  );
-}
-
-/* =========================================================
-   BLOTTER REPORTS
-   CAPTAIN + SECRETARY ONLY
-========================================================= */
-
-function BlotterReports({ openModal }) {
-  const reports = [
-    [
-      "BL-2023-0142",
-      "Oct 24, 2023",
-      "Maria Santos / Juan Dela Cruz",
-      "Noise Complaint",
-      "Pending Review",
-    ],
-
-    [
-      "BL-2023-0141",
-      "Oct 22, 2023",
-      "Roberto Garcia / Unknown",
-      "Property Damage",
-      "Hearing Scheduled",
-    ],
-
-    [
-      "BL-2023-0140",
-      "Oct 20, 2023",
-      "Elena Reyes / Carlos Mendoza",
-      "Physical Injury",
-      "Resolved",
-    ],
-
-    [
-      "BL-2023-0139",
-      "Oct 18, 2023",
-      "Ana Lim / Neighbor",
-      "Waste Disposal",
-      "Hearing Scheduled",
-    ],
-  ];
-
-  return (
-    <>
-      <div style={styles.headingRow}>
-        <div>
-          <h1 style={styles.heading}>
-            Blotter Reports
-          </h1>
-
-          <p style={styles.description}>
-            Manage and track all filed incidents
-            within the barangay jurisdiction.
-          </p>
-        </div>
-
-        <button
-          style={styles.button}
-          onClick={() =>
-            openModal("New Blotter Entry")
-          }
-        >
-          + New Blotter Entry
-        </button>
-      </div>
-
-      <div style={styles.section}>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns:
-              "repeat(3,1fr)",
-            gap: 12,
-            marginBottom: 20,
-          }}
-        >
-          <select style={styles.input}>
-            <option>All Statuses</option>
-            <option>
-              Pending Review
-            </option>
-            <option>Resolved</option>
-            <option>
-              Hearing Scheduled
-            </option>
-          </select>
-
-          <select style={styles.input}>
-            <option>All Types</option>
-            <option>
-              Noise Complaint
-            </option>
-            <option>
-              Property Damage
-            </option>
-            <option>
-              Physical Injury
-            </option>
-            <option>
-              Waste Disposal
-            </option>
-          </select>
-
-          <input
-            type="date"
-            style={styles.input}
-          />
-        </div>
-
-        <div style={styles.tableWrap}>
-          <table style={styles.table}>
-            <thead>
-              <tr>
-                <th style={styles.th}>
-                  CASE ID
-                </th>
-
-                <th style={styles.th}>
-                  DATE FILED
-                </th>
-
-                <th style={styles.th}>
-                  COMPLAINANT / RESPONDENT
-                </th>
-
-                <th style={styles.th}>
-                  INCIDENT TYPE
-                </th>
-
-                <th style={styles.th}>
-                  STATUS
-                </th>
-
-                <th style={styles.th}>
-                  ACTION
-                </th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {reports.map((r, index) => (
-                <tr key={index}>
-                  <td style={styles.td}>
-                    {r[0]}
-                  </td>
-
-                  <td style={styles.td}>
-                    {r[1]}
-                  </td>
-
-                  <td style={styles.td}>
-                    {r[2]}
-                  </td>
-
-                  <td style={styles.td}>
-                    {r[3]}
-                  </td>
-
-                  <td style={styles.td}>
-                    <span
-                      style={{
-                        ...styles.badge,
-                        ...(r[4] ===
-                        "Resolved"
-                          ? styles.greenBadge
-                          : r[4] ===
-                            "Pending Review"
-                          ? styles.redBadge
-                          : styles.blueBadge),
-                      }}
-                    >
-                      {r[4]}
-                    </span>
-                  </td>
-
-                  <td style={styles.td}>
-                    <button
-                      style={{
-                        ...styles.button,
-                        padding:
-                          "7px 12px",
-                        fontSize: 12,
-                      }}
-                      onClick={() =>
-                        alert(
-                          `Opening case ${r[0]}`
-                        )
-                      }
-                    >
-                      View
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </>
-  );
-}
-
-/* =========================================================
-   RESIDENT DASHBOARD
-========================================================= */
-
-function ResidentDashboard({
-  setPage,
-  openModal,
-}) {
-  return (
-    <>
-      <div style={styles.headingRow}>
-        <div>
-          <h1 style={styles.heading}>
-            Welcome back, Maria!
-          </h1>
-
-          <p style={styles.description}>
-            Your resident dashboard is updated
-            for today.
-          </p>
-        </div>
-
-        <button
-          style={styles.button}
-          onClick={() =>
-            setPage("My Requests")
-          }
-        >
-          + Request Document
-        </button>
-      </div>
-
-      {/* Quick Actions */}
-
-      <h3 style={{ marginTop: 28 }}>
-        Quick Actions
-      </h3>
-
-      <div style={styles.cardGrid}>
-        <div
-          style={{
-            ...styles.card,
-            ...styles.residentActionCard,
-          }}
-          onClick={() =>
-            setPage("My Requests")
-          }
-        >
-          <h3>📄</h3>
-
-          <h3>Request Document</h3>
-
-          <p>
-            Request barangay certificates and
-            other documents.
-          </p>
-        </div>
-
-        <div
-          style={{
-            ...styles.card,
-            ...styles.residentActionCard,
-          }}
-          onClick={() =>
-            setPage("My Reports")
-          }
-        >
-          <h3>⚠️</h3>
-
-          <h3>File Blotter</h3>
-
-          <p>
-            Report an incident to the barangay.
-          </p>
-        </div>
-
-        <div
-          style={{
-            ...styles.card,
-            ...styles.residentActionCard,
-          }}
-          onClick={() =>
-            setPage("Announcements")
-          }
-        >
-          <h3>📢</h3>
-
-          <h3>Announcements</h3>
-
-          <p>
-            View the latest community
-            announcements.
-          </p>
-        </div>
-      </div>
-
-      {/* Active Requests */}
-
-      <div style={styles.sectionHeader}>
-        <h3>My Active Requests</h3>
-
-        <button
-          style={styles.linkButton}
-          onClick={() =>
-            setPage("My Requests")
-          }
-        >
-          View All
-        </button>
-      </div>
-
-      <div style={styles.tableCard}>
-        <table style={styles.table}>
-          <thead>
-            <tr>
-              <th style={styles.th}>
-                TYPE
-              </th>
-
-              <th style={styles.th}>
-                DATE FILED
-              </th>
-
-              <th style={styles.th}>
-                STATUS
-              </th>
-
-              <th style={styles.th}>
-                ACTION
-              </th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <td style={styles.td}>
-                Barangay Clearance
-              </td>
-
-              <td style={styles.td}>
-                Oct 24, 2023
-              </td>
-
-              <td style={styles.td}>
-                <span
-                  style={styles.pending}
-                >
-                  Pending
-                </span>
-              </td>
-
-              <td style={styles.td}>
-                👁
-              </td>
-            </tr>
-
-            <tr>
-              <td style={styles.td}>
-                Birth Certificate
-              </td>
-
-              <td style={styles.td}>
-                Oct 20, 2023
-              </td>
-
-              <td style={styles.td}>
-                <span
-                  style={styles.approved}
-                >
-                  Approved
-                </span>
-              </td>
-
-              <td style={styles.td}>
-                👁
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      {/* Community Feed */}
-
-      <div style={styles.sectionHeader}>
-        <h3>Community Feed</h3>
-
-        <button
-          style={styles.linkButton}
-          onClick={() =>
-            setPage("Announcements")
-          }
-        >
-          View All
-        </button>
-      </div>
-
-      <div style={styles.feedCard}>
-        <h4>📢 Barangay Assembly</h4>
-
-        <p>
-          Join us for the upcoming barangay
-          assembly and community meeting.
-        </p>
-
-        <small>
-          Today • 8:00 AM
-        </small>
-      </div>
-
-      <div style={styles.feedCard}>
-        <h4>
-          💧 Water Interruption Advisory
-        </h4>
-
-        <p>
-          Please be advised of a scheduled water
-          service interruption.
-        </p>
-
-        <small>Tomorrow</small>
-      </div>
-    </>
-  );
-}
-
-/* =========================================================
-   RESIDENT ANNOUNCEMENTS
-   RESIDENT ONLY
-========================================================= */
-
-function ResidentAnnouncement() {
-  const announcements = [
-    {
-      category: "INFRASTRUCTURE",
-      title:
-        "Main Street Water Main Repair Schedule",
-      description:
-        "Emergency repairs on the main water line will begin tomorrow. Expect partial lane closures.",
-      date: "Today • 8:00 AM",
-    },
-
-    {
-      category: "PUBLIC HEALTH",
-      title:
-        "Annual Flu Vaccination Drive Begins Next Week",
-      description:
-        "The health center will provide free vaccination services to residents.",
-      date: "Oct 12, 2023",
-    },
-
-    {
-      category: "EVENTS",
-      title: "Barangay Festival",
-      description:
-        "Join the community for the annual barangay festival.",
-      date: "Oct 15 • 10 AM",
-    },
-
-    {
-      category: "SERVICES",
-      title:
-        "Holiday Waste Collection Schedule",
-      description:
-        "Trash and recycling collection schedules will be adjusted during the holiday.",
-      date: "Oct 20, 2023",
-    },
-  ];
-
-  return (
-    <>
-      <h1 style={styles.heading}>
-        Announcements
-      </h1>
-
-      <p style={styles.description}>
-        Stay updated with the latest news,
-        alerts, and events in your area.
-      </p>
-
-      <div style={styles.filterButtons}>
-        <button
-          style={styles.activeFilter}
-        >
-          All
-        </button>
-
-        <button
-          style={styles.filterButton}
-        >
-          Public Health
-        </button>
-
-        <button
-          style={styles.filterButton}
-        >
-          Infrastructure
-        </button>
-
-        <button
-          style={styles.filterButton}
-        >
-          Events
-        </button>
-      </div>
-
-      <div style={styles.announcementGrid}>
-        {announcements.map(
-          (item, index) => (
-            <div
-              style={styles.announcementCard}
-              key={index}
-            >
-              <span
-                style={
-                  styles.announcementCategory
-                }
-              >
-                {item.category}
-              </span>
-
-              <h2
-                style={{
-                  color: "#173b76",
-                  fontSize: 19,
-                  margin:
-                    "5px 0 10px",
-                }}
-              >
-                {item.title}
-              </h2>
-
-              <p
-                style={{
-                  color: "#64748b",
-                  lineHeight: 1.6,
-                }}
-              >
-                {item.description}
-              </p>
-
-              <small
-                style={{
-                  color: "#94a3b8",
-                }}
-              >
-                {item.date}
-              </small>
+            <div style={{display:'flex', gap:'10px', marginTop:'15px'}}>
+              <button style={styles.primaryButton} onClick={handleSignup}>Sign Up as {signupData.role}</button>
+              <button style={styles.secondaryButton} onClick={() => setShowSignup(false)}>Cancel</button>
             </div>
-          )
-        )}
-      </div>
-    </>
-  );
-}
-
-/* =========================================================
-   RESIDENT MY REQUESTS
-========================================================= */
-
-function ResidentRequests() {
-  return (
-    <>
-      <div style={styles.headingRow}>
-        <div>
-          <h1 style={styles.heading}>
-            My Requests
-          </h1>
-
-          <p style={styles.description}>
-            View and track your submitted
-            document requests.
-          </p>
-        </div>
-
-        <button
-          style={styles.button}
-          onClick={() =>
-            alert(
-              "New document request opened."
-            )
-          }
-        >
-          + Request Document
-        </button>
-      </div>
-
-      <div style={styles.cards}>
-        <StatCard
-          title="Total Requests"
-          value="2"
-          subtitle="Your submitted requests"
-        />
-
-        <StatCard
-          title="Pending"
-          value="1"
-          subtitle="Waiting for processing"
-        />
-
-        <StatCard
-          title="Approved"
-          value="1"
-          subtitle="Ready for release"
-        />
-      </div>
-
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>
-          My Document Requests
-        </h3>
-
-        <div style={styles.tableWrap}>
-          <table style={styles.table}>
-            <thead>
-              <tr>
-                <th style={styles.th}>
-                  REQUEST ID
-                </th>
-
-                <th style={styles.th}>
-                  DOCUMENT
-                </th>
-
-                <th style={styles.th}>
-                  DATE FILED
-                </th>
-
-                <th style={styles.th}>
-                  STATUS
-                </th>
-
-                <th style={styles.th}>
-                  ACTION
-                </th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr>
-                <td style={styles.td}>
-                  REQ-2023-045
-                </td>
-
-                <td style={styles.td}>
-                  Barangay Clearance
-                </td>
-
-                <td style={styles.td}>
-                  Oct 24, 2023
-                </td>
-
-                <td style={styles.td}>
-                  <span
-                    style={{
-                      ...styles.badge,
-                      ...styles.yellowBadge,
-                    }}
-                  >
-                    Pending
-                  </span>
-                </td>
-
-                <td style={styles.td}>
-                  <button
-                    style={{
-                      ...styles.secondaryButton,
-                      padding:
-                        "7px 12px",
-                    }}
-                    onClick={() =>
-                      alert(
-                        "Request details opened."
-                      )
-                    }
-                  >
-                    View
-                  </button>
-                </td>
-              </tr>
-
-              <tr>
-                <td style={styles.td}>
-                  REQ-2023-038
-                </td>
-
-                <td style={styles.td}>
-                  Birth Certificate
-                </td>
-
-                <td style={styles.td}>
-                  Oct 20, 2023
-                </td>
-
-                <td style={styles.td}>
-                  <span
-                    style={{
-                      ...styles.badge,
-                      ...styles.greenBadge,
-                    }}
-                  >
-                    Approved
-                  </span>
-                </td>
-
-                <td style={styles.td}>
-                  <button
-                    style={{
-                      ...styles.secondaryButton,
-                      padding:
-                        "7px 12px",
-                    }}
-                    onClick={() =>
-                      alert(
-                        "Request details opened."
-                      )
-                    }
-                  >
-                    View
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </>
-  );
-}
-
-/* =========================================================
-   RESIDENT MY REPORTS
-========================================================= */
-
-function ResidentReports() {
-  return (
-    <>
-      <div style={styles.headingRow}>
-        <div>
-          <h1 style={styles.heading}>
-            My Reports
-          </h1>
-
-          <p style={styles.description}>
-            File and track incidents that you
-            reported to the barangay.
-          </p>
-        </div>
-
-        <button
-          style={styles.button}
-          onClick={() =>
-            alert(
-              "New blotter report form opened."
-            )
-          }
-        >
-          + File Blotter
-        </button>
-      </div>
-
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>
-          My Filed Reports
-        </h3>
-
-        <div style={styles.tableWrap}>
-          <table style={styles.table}>
-            <thead>
-              <tr>
-                <th style={styles.th}>
-                  CASE ID
-                </th>
-
-                <th style={styles.th}>
-                  DATE FILED
-                </th>
-
-                <th style={styles.th}>
-                  INCIDENT
-                </th>
-
-                <th style={styles.th}>
-                  STATUS
-                </th>
-
-                <th style={styles.th}>
-                  ACTION
-                </th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr>
-                <td style={styles.td}>
-                  MY-BL-001
-                </td>
-
-                <td style={styles.td}>
-                  Oct 24, 2023
-                </td>
-
-                <td style={styles.td}>
-                  Noise Complaint
-                </td>
-
-                <td style={styles.td}>
-                  <span
-                    style={{
-                      ...styles.badge,
-                      ...styles.blueBadge,
-                    }}
-                  >
-                    Under Review
-                  </span>
-                </td>
-
-                <td style={styles.td}>
-                  <button
-                    style={{
-                      ...styles.secondaryButton,
-                      padding:
-                        "7px 12px",
-                    }}
-                    onClick={() =>
-                      alert(
-                        "Report details opened."
-                      )
-                    }
-                  >
-                    View
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </>
-  );
-}
-
-/* =========================================================
-   SIMPLE PAGE
-========================================================= */
-
-function SimplePage({ title }) {
-  return (
-    <div style={styles.section}>
-      <h2 style={styles.sectionTitle}>
-        {title}
-      </h2>
-
-      <p style={styles.description}>
-        This section is ready for your barangay
-        management functions.
-      </p>
-
-      <button
-        style={styles.button}
-        onClick={() =>
-          alert(
-            `${title} opened successfully.`
-          )
-        }
-      >
-        Open {title}
-      </button>
-    </div>
-  );
-}
-
-/* =========================================================
-   MODAL
-========================================================= */
-
-function Modal({ title, close }) {
-  const [name, setName] = useState("");
-  const [details, setDetails] =
-    useState("");
-
-  return (
-    <div style={styles.modalBg}>
-      <div style={styles.modal}>
-        <h2 style={{ marginTop: 0 }}>
-          {title}
-        </h2>
-
-        <div style={styles.formGroup}>
-          <label style={styles.label}>
-            Name / Subject
-          </label>
-
-          <input
-            style={styles.input}
-            value={name}
-            onChange={(e) =>
-              setName(e.target.value)
-            }
-            placeholder="Enter information"
-          />
-        </div>
-
-        <div style={styles.formGroup}>
-          <label style={styles.label}>
-            Details
-          </label>
-
-          <textarea
-            style={styles.textarea}
-            value={details}
-            onChange={(e) =>
-              setDetails(e.target.value)
-            }
-            placeholder="Enter details..."
-          />
-        </div>
-
-        <div style={styles.actionRow}>
-          <button
-            style={styles.secondaryButton}
-            onClick={close}
-          >
-            Cancel
-          </button>
-
-          <button
-            style={styles.button}
-            onClick={() => {
-              alert(
-                `${title} saved successfully!`
-              );
-              close();
-            }}
-          >
-            Save Record
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* =========================================================
-   APP
-========================================================= */
-
-function App() {
-  const [user, setUser] = useState(null);
-  const [page, setPage] =
-    useState("Dashboard");
-  const [modal, setModal] =
-    useState(null);
-
-  /* =====================================================
-     ROLE PERMISSIONS
-  ===================================================== */
-
-  const permissions = {
-    Resident: [
-      "Dashboard",
-      "My Requests",
-      "Announcements",
-      "My Reports",
-    ],
-
-    Captain: [
-      "Dashboard",
-      "Document Requests",
-      "Announcements",
-      "Blotter Reports",
-    ],
-
-    Secretary: [
-      "Dashboard",
-      "Document Requests",
-      "Announcements",
-      "Blotter Reports",
-    ],
-  };
-
-  /* =====================================================
-     LOGIN
-  ===================================================== */
-
-  const login = (role, email) => {
-    setUser({
-      role,
-      email,
-    });
-
-    setPage("Dashboard");
-    setModal(null);
-  };
-
-  /* =====================================================
-     LOGOUT
-  ===================================================== */
-
-  const logout = () => {
-    setUser(null);
-    setPage("Dashboard");
-    setModal(null);
-  };
-
-  /* =====================================================
-     PERMISSION-CHECKED PAGE NAVIGATION
-
-     This prevents one role from manually trying to
-     navigate to another role's page.
-  ===================================================== */
-
-  const changePage = (requestedPage) => {
-    if (!user) {
-      return;
-    }
-
-    const allowedPages =
-      permissions[user.role] || [];
-
-    if (
-      allowedPages.includes(requestedPage)
-    ) {
-      setPage(requestedPage);
-      setModal(null);
-    } else {
-      alert(
-        `Access denied. ${user.role} does not have permission to open "${requestedPage}".`
-      );
-    }
-  };
-
-  /* =====================================================
-     MODAL PERMISSION
-
-     Only Captain and Secretary can use admin modals.
-  ===================================================== */
-
-  const openModal = (title) => {
-    if (
-      !user ||
-      !["Captain", "Secretary"].includes(
-        user.role
-      )
-    ) {
-      alert(
-        "Access denied. This function is only available to Captain or Secretary."
-      );
-      return;
-    }
-
-    setModal(title);
-  };
-
-  const closeModal = () => {
-    setModal(null);
-  };
-
-  /* =====================================================
-     LOGIN SCREEN
-  ===================================================== */
-
-  if (!user) {
-    return <Login onLogin={login} />;
-  }
-
-  /* =====================================================
-     EXTRA SECURITY CHECK
-
-     If the current page is not allowed for the
-     logged-in role, automatically return to Dashboard.
-  ===================================================== */
-
-  const allowedPages =
-    permissions[user.role] || [];
-
-  if (!allowedPages.includes(page)) {
-    setPage("Dashboard");
-
-    return null;
-  }
-
-  /* =====================================================
-     PAGE CONTENT
-  ===================================================== */
-
-  let content;
-
-  /* ================= DASHBOARD ================= */
-
-  if (page === "Dashboard") {
-    if (user.role === "Captain") {
-      content = (
-        <CaptainDashboard
-          setPage={changePage}
-          openModal={openModal}
-        />
-      );
-    } else if (
-      user.role === "Secretary"
-    ) {
-      content = (
-        <SecretaryDashboard
-          setPage={changePage}
-          openModal={openModal}
-        />
-      );
-    } else {
-      content = (
-        <ResidentDashboard
-          setPage={changePage}
-          openModal={openModal}
-        />
-      );
-    }
-  }
-
-  /* ============ DOCUMENT REQUESTS ============ */
-
-  else if (
-    page === "Document Requests"
-  ) {
-    if (
-      user.role === "Captain" ||
-      user.role === "Secretary"
-    ) {
-      content = (
-        <DocumentRequests
-          openModal={openModal}
-        />
-      );
-    } else {
-      content = (
-        <AccessDenied
-          role={user.role}
-          page="Document Requests"
-        />
-      );
-    }
-  }
-
-  /* ================ ANNOUNCEMENTS ================ */
-
-  else if (page === "Announcements") {
-    /*
-      IMPORTANT:
-
-      Resident:
-        ResidentAnnouncement
-
-      Captain:
-        Original Announcements
-
-      Secretary:
-        Original Announcements
-    */
-
-    if (user.role === "Resident") {
-      content = <ResidentAnnouncement />;
-    } else {
-      content = (
-        <Announcements
-          openModal={openModal}
-        />
-      );
-    }
-  }
-
-  /* ============== BLOTTER REPORTS ============== */
-
-  else if (
-    page === "Blotter Reports"
-  ) {
-    if (
-      user.role === "Captain" ||
-      user.role === "Secretary"
-    ) {
-      content = (
-        <BlotterReports
-          openModal={openModal}
-        />
-      );
-    } else {
-      content = (
-        <AccessDenied
-          role={user.role}
-          page="Blotter Reports"
-        />
-      );
-    }
-  }
-
-  /* ================ MY REQUESTS ================ */
-
-  else if (page === "My Requests") {
-    if (user.role === "Resident") {
-      content = <ResidentRequests />;
-    } else {
-      content = (
-        <AccessDenied
-          role={user.role}
-          page="My Requests"
-        />
-      );
-    }
-  }
-
-  /* ================= MY REPORTS ================= */
-
-  else if (page === "My Reports") {
-    if (user.role === "Resident") {
-      content = <ResidentReports />;
-    } else {
-      content = (
-        <AccessDenied
-          role={user.role}
-          page="My Reports"
-        />
-      );
-    }
-  }
-
-  /* ================= OTHER ================= */
-
-  else {
-    content = (
-      <SimplePage title={page} />
-    );
-  }
-
-  /* =====================================================
-     FINAL UI
-  ===================================================== */
-
-  return (
-    <div style={styles.app}>
-      <div style={styles.layout}>
-        <Sidebar
-          role={user.role}
-          page={page}
-          setPage={changePage}
-          logout={logout}
-        />
-
-        <main style={styles.main}>
-          <Topbar role={user.role} />
-
-          <div style={styles.content}>
-            {content}
           </div>
-        </main>
-      </div>
-
-      {modal && (
-        <Modal
-          title={modal}
-          close={closeModal}
-        />
+        </div>
       )}
     </div>
   );
 }
 
-/* =========================================================
-   ACCESS DENIED
-========================================================= */
-
-function AccessDenied({
-  role,
-  page,
-}) {
+function DashboardModules({ onSelect, logout, user }) {
+  const modules = [
+    { name: "Resident Dashboard", role: "Resident", icon: "🏠", color: "#2563eb", description: "Access resident services, document requests, announcements, and blotter reports in SAN AGUSTINE." },
+    { name: "Captain Dashboard", role: "Captain", icon: "👨💼", color: "#16a34a", description: "Manage barangay operations, residents, documents, announcements, and reports for SAN AGUSTINE." },
+    { name: "Secretary Dashboard", role: "Secretary", icon: "📋", color: "#9333ea", description: "Manage records, document requests, announcements, and barangay reports of SAN AGUSTINE." },
+  ];
   return (
-    <div style={styles.section}>
-      <h2 style={styles.sectionTitle}>
-        Access Denied
-      </h2>
-
-      <p style={styles.description}>
-        The <b>{role}</b> role does not have
-        permission to access{" "}
-        <b>{page}</b>.
-      </p>
+    <div style={styles.modulePage}>
+      <header style={styles.moduleTopbar}>
+        <div style={styles.brandArea}><div style={styles.smallLogo}>🏛</div><div><h2 style={styles.brandTitle}>Barangay Management System</h2><p style={styles.brandSubtitle}>{BARANGAY} | Role: {user.role}</p></div></div>
+        <div style={styles.userArea}><div style={styles.userInfo}><strong>{user.email}</strong><span style={{background:'#dbeafe', color:'#1d4ed8', padding:'2px 8px', borderRadius:'20px', fontSize:'10px', marginTop:'3px'}}>{user.role}</span></div><button style={styles.logoutButton} onClick={logout}>Logout</button></div>
+      </header>
+      <main style={styles.moduleContent}>
+        <div style={styles.welcomeBox}><h1>Welcome to Barangay SAN AGUSTINE</h1><p>Ikaw ay naka-login bilang <b>{user.role}</b>. Isang dashboard lang ang pwede mong buksan - {BARANGAY}</p></div>
+        <div style={styles.moduleGrid}>
+          {modules.map((m) => {
+            const isAllowed = user.role === m.role;
+            return (
+              <div key={m.name} style={{...styles.moduleCard, opacity: isAllowed ? 1 : 0.6, border: isAllowed ? `2px solid ${m.color}` : '1px solid #e2e8f0', cursor: isAllowed ? 'pointer' : 'not-allowed'}} onClick={() => onSelect(m.name)}>
+                {!isAllowed && <div style={styles.lockedBadge}>🔒 LOCKED - {user.role} ka lang</div>}
+                {isAllowed && <div style={{...styles.lockedBadge, background:'#dcfce7', color:'#16a34a'}}>✅ ALLOWED FOR YOU</div>}
+                <div style={{ ...styles.moduleIcon, background: `${m.color}18`, color: m.color }}>{m.icon}</div>
+                <h2 style={styles.moduleTitle}>{m.name}</h2>
+                <p style={styles.moduleDescription}>{m.description}</p>
+                <button style={{ ...styles.moduleButton, background: isAllowed ? m.color : '#94a3b8' }} onClick={(e) => { e.stopPropagation(); onSelect(m.name); }}>
+                  {isAllowed ? 'Open Dashboard →' : 'Access Denied ⛔'}
+                </button>
+              </div>
+            )
+          })}
+        </div>
+      </main>
     </div>
   );
 }
 
-export default App;
+function DashboardLayout({ user, selectedModule, activePage, setActivePage, logout, backToModules, documents, setDocuments, announcements, setAnnouncements, blotters, setBlotters, showToast }) {
+  const role = selectedModule.replace(" Dashboard", "");
+  const menuItems = [{ name: "Dashboard", icon: "📊" }, { name: "Documents", icon: "📄" }, { name: "Announcements", icon: "📢" }, { name: "Blotter Reports", icon: "📝" }];
+  return (
+    <div style={styles.dashboardLayout}>
+      <aside style={styles.sidebar}>
+        <div style={styles.sidebarBrand}><div style={styles.sidebarLogo}>🏛</div><div><h2 style={styles.sidebarTitle}>SAN AGUSTINE</h2><p style={styles.sidebarSubtitle}>{BARANGAY}</p></div></div>
+        <div style={styles.moduleBadge}><span>Current Module</span><strong>{selectedModule}</strong><span style={{fontSize:'10px', background:'#2563eb', padding:'2px 6px', borderRadius:'10px', marginTop:'5px', width:'fit-content'}}>{user.role}</span></div>
+        <nav style={styles.sidebarNav}><p style={styles.menuLabel}>MAIN MENU</p>
+          {menuItems.map((item) => (
+            <button key={item.name} onClick={() => { setActivePage(item.name); showToast(`Opened ${item.name}`); }} style={{ ...styles.sidebarMenu, ...(activePage === item.name ? styles.sidebarMenuActive : {}) }}>
+              <span>{item.icon}</span><span>{item.name}</span>
+            </button>
+          ))}
+        </nav>
+        <div style={styles.sidebarBottom}>
+          <button style={styles.changeModuleButton} onClick={() => { backToModules(); showToast("Changed module"); }}>🔄 Change Module</button>
+          <button style={styles.sidebarLogout} onClick={logout}>🚪 Logout</button>
+        </div>
+      </aside>
+      <main style={styles.mainContent}>
+        <header style={styles.dashboardTopbar}><div><p style={styles.breadcrumb}>Home / {activePage} / {BARANGAY}</p><h1 style={styles.pageTitle}>{activePage}</h1></div>
+          <div style={styles.dashboardUser}><div style={styles.avatar}>{role.charAt(0)}</div><div><strong>{role}</strong><br/><span style={{fontSize:'11px', color:'#64748b'}}>{user.email}</span></div></div>
+        </header>
+        <section style={styles.pageContent}>
+          {activePage === "Dashboard" && <DashboardHome role={role} selectedModule={selectedModule} setActivePage={setActivePage} showToast={showToast} />}
+          {activePage === "Documents" && <DocumentsPage role={role} documents={documents} setDocuments={setDocuments} showToast={showToast} />}
+          {activePage === "Announcements" && <AnnouncementsPage role={role} announcements={announcements} setAnnouncements={setAnnouncements} showToast={showToast} />}
+          {activePage === "Blotter Reports" && <BlotterReportsPage role={role} blotters={blotters} setBlotters={setBlotters} showToast={showToast} />}
+        </section>
+      </main>
+    </div>
+  );
+}
+
+function DashboardHome({ role, selectedModule, setActivePage, showToast }) {
+  const stats = [
+    { title: "Document Requests", value: "24", icon: "📄", color: "#2563eb" },
+    { title: "Announcements", value: "8", icon: "📢", color: "#16a34a" },
+    { title: "Blotter Reports", value: "12", icon: "📝", color: "#ea580c" },
+    { title: "Pending Requests", value: "6", icon: "⏳", color: "#9333ea" },
+  ];
+  return (
+    <div>
+      <div style={styles.dashboardWelcome}><div><h2>Welcome, {role}!</h2><p>You are using <strong>{selectedModule}</strong> - {BARANGAY}</p></div><div style={styles.dateBox}><span>📅</span><span>{new Date().toLocaleDateString()}</span></div></div>
+      <div style={styles.statsGrid}>{stats.map((s) => (<div style={styles.statCard} key={s.title} onClick={() => showToast(`${s.title}: ${s.value}`)}><div style={{ ...styles.statIcon, background: `${s.color}18`, color: s.color }}>{s.icon}</div><div><p style={styles.statTitle}>{s.title}</p><h2 style={styles.statValue}>{s.value}</h2></div></div>))}</div>
+      <div style={styles.sectionGrid}>
+        <div style={styles.contentCard}><h2>Quick Actions - {BARANGAY}</h2>
+          <div style={styles.quickActions}>
+            <button style={styles.quickActionButton} onClick={() => setActivePage("Documents")}><span>📄</span><span>View Documents</span></button>
+            <button style={styles.quickActionButton} onClick={() => setActivePage("Announcements")}><span>📢</span><span>View Announcements</span></button>
+            <button style={styles.quickActionButton} onClick={() => setActivePage("Blotter Reports")}><span>📝</span><span>View Blotter Reports</span></button>
+          </div>
+        </div>
+        <div style={styles.contentCard}><h2>Recent Activity</h2>
+          <div style={styles.activityList}>
+            <div style={styles.activityItem}><span style={{...styles.dot, background:'#2563eb'}}></span><div><strong>New document request</strong><p style={{margin:'4px 0', fontSize:'12px', color:'#64748b'}}>Barangay Clearance - SAN AGUSTINE</p><small>Today, 9:30 AM</small></div></div>
+            <div style={styles.activityItem}><span style={{...styles.dot, background:'#16a34a'}}></span><div><strong>New announcement posted</strong><p style={{margin:'4px 0', fontSize:'12px', color:'#64748b'}}>Barangay meeting - SAN AGUSTINE</p><small>Yesterday, 3:00 PM</small></div></div>
+            <div style={styles.activityItem}><span style={{...styles.dot, background:'#ea580c'}}></span><div><strong>Blotter report updated</strong><p style={{margin:'4px 0', fontSize:'12px', color:'#64748b'}}>Report #BR-0012</p><small>Yesterday, 10:15 AM</small></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DocumentsPage({ role, documents, setDocuments, showToast }) {
+  const [showForm, setShowForm] = useState(false);
+  const [showDetail, setShowDetail] = useState(null);
+  const [form, setForm] = useState({ resident: "", type: "Barangay Clearance" });
+  const [search, setSearch] = useState("");
+
+  const handleSubmit = () => {
+    if (!form.resident) return showToast("Enter resident name");
+    const newDoc = { id: `DOC-${String(documents.length+1).padStart(3,'0')}`, resident: form.resident, type: form.type, date: new Date().toLocaleDateString(), status: "Pending" };
+    setDocuments([newDoc, ...documents]);
+    setForm({ resident: "", type: "Barangay Clearance" });
+    setShowForm(false);
+    showToast(`Document ${newDoc.id} created - ${BARANGAY}`);
+  };
+
+  const filtered = documents.filter(d => d.resident.toLowerCase().includes(search.toLowerCase()) || d.type.toLowerCase().includes(search.toLowerCase()));
+
+  return (
+    <div>
+      <div style={styles.pageHeader}><div><h2>Document Requests - {BARANGAY}</h2><p>Manage barangay document requests.</p></div><button style={styles.primaryButton} onClick={() => setShowForm(!showForm)}>{showForm ? "Close Form" : "+ New Request"}</button></div>
+      {showForm && (
+        <div style={styles.formCard}><h3>Create Document Request - {BARANGAY}</h3>
+          <input style={styles.input} placeholder="Resident Name - SAN AGUSTINE" value={form.resident} onChange={e => setForm({...form, resident:e.target.value})} />
+          <select style={styles.input} value={form.type} onChange={e => setForm({...form, type:e.target.value})}>
+            <option>Barangay Clearance</option><option>Certificate of Residency</option><option>Certificate of Indigency</option><option>Business Clearance</option>
+          </select>
+          <button style={styles.primaryButton} onClick={handleSubmit}>Submit Request</button>
+        </div>
+      )}
+      <div style={styles.tableCard}>
+        <div style={styles.cardHeader}><h3>Document List</h3><input style={{...styles.input, width:'200px', margin:0}} placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} /></div>
+        <div style={styles.tableWrapper}><table style={styles.table}><thead><tr><th>ID</th><th>Resident</th><th>Type</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody>{filtered.map(doc => (<tr key={doc.id}><td>{doc.id}</td><td>{doc.resident}</td><td>{doc.type}</td><td>{doc.date}</td><td><span style={styles.statusBadge}>{doc.status}</span></td><td><button style={styles.viewButton} onClick={() => setShowDetail(doc)}>View</button></td></tr>))}</tbody>
+        </table></div>
+      </div>
+      {showDetail && (
+        <div style={styles.modalOverlay} onClick={() => setShowDetail(null)}><div style={styles.modal} onClick={e=>e.stopPropagation()}>
+          <h3>{showDetail.id} - {BARANGAY}</h3><p><b>Resident:</b> {showDetail.resident}</p><p><b>Type:</b> {showDetail.type}</p><p><b>Status:</b> {showDetail.status}</p>
+          <div style={{display:'flex', gap:'8px', marginTop:'15px', flexWrap:'wrap'}}>
+            {["Pending","Processing","Approved"].map(s => <button key={s} style={{...styles.viewButton, background: showDetail.status===s ? '#2563eb':'#eff6ff', color: showDetail.status===s ? 'white':'#2563eb'}} onClick={() => { setDocuments(documents.map(d=> d.id===showDetail.id ? {...d, status:s} : d)); setShowDetail({...showDetail, status:s}); showToast(`Status changed to ${s}`); }}>{s}</button>)}
+            <button style={styles.secondaryButton} onClick={() => setShowDetail(null)}>Close</button>
+          </div>
+        </div></div>
+      )}
+    </div>
+  );
+}
+
+function AnnouncementsPage({ role, announcements, setAnnouncements, showToast }) {
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState({ title: "", date: "", description: "" });
+  const [detail, setDetail] = useState(null);
+  const canManage = role === "Captain" || role === "Secretary";
+
+  const handlePost = () => {
+    if (!form.title) return showToast("Enter title");
+    setAnnouncements([{ id: Date.now(), ...form, date: form.date || new Date().toLocaleDateString() }, ...announcements]);
+    setForm({ title:"", date:"", description:"" });
+    setShowForm(false);
+    showToast(`Announcement posted - ${BARANGAY}`);
+  };
+
+  return (
+    <div>
+      <div style={styles.pageHeader}><div><h2>Announcements - {BARANGAY}</h2><p>Latest barangay announcements.</p></div>{canManage && <button style={styles.primaryButton} onClick={() => setShowForm(!showForm)}>{showForm ? "Close Form" : "+ Add Announcement"}</button>}</div>
+      {showForm && canManage && (
+        <div style={styles.formCard}><h3>New Announcement - {BARANGAY}</h3>
+          <input style={styles.input} placeholder="Title" value={form.title} onChange={e=>setForm({...form, title:e.target.value})} />
+          <input type="date" style={styles.input} value={form.date} onChange={e=>setForm({...form, date:e.target.value})} />
+          <textarea style={styles.textarea} placeholder="Details - SAN AGUSTINE" value={form.description} onChange={e=>setForm({...form, description:e.target.value})}></textarea>
+          <button style={styles.primaryButton} onClick={handlePost}>Post Announcement</button>
+        </div>
+      )}
+      <div style={styles.announcementGrid}>{announcements.map(a => (
+        <div style={styles.announcementCard} key={a.id}>
+          <div style={styles.announcementIcon}>📢</div>
+          <div><h3>{a.title}</h3><p style={{color:'#2563eb', fontSize:'12px'}}>📅 {a.date} • {BARANGAY}</p><p style={{fontSize:'13px', color:'#475569'}}>{a.description}</p>
+          <div style={{display:'flex', gap:'8px', marginTop:'10px'}}><button style={styles.textButton} onClick={() => setDetail(a)}>Read More →</button>{canManage && <button style={styles.textButton} onClick={() => { setAnnouncements(announcements.filter(x=>x.id!==a.id)); showToast("Deleted"); }}>Delete</button>}</div></div>
+        </div>
+      ))}</div>
+      {detail && <div style={styles.modalOverlay} onClick={()=>setDetail(null)}><div style={styles.modal} onClick={e=>e.stopPropagation()}><h3>{detail.title}</h3><p style={{fontSize:'12px', color:'#64748b'}}>{detail.date} • {BARANGAY}</p><p>{detail.description}</p><button style={styles.primaryButton} onClick={()=>setDetail(null)}>Close</button></div></div>}
+    </div>
+  );
+}
+
+function BlotterReportsPage({ role, blotters, setBlotters, showToast }) {
+  const [showForm, setShowForm] = useState(false);
+  const [detail, setDetail] = useState(null);
+  const [form, setForm] = useState({ complainant:"", incident:"", description:"" });
+
+  const handleSubmit = () => {
+    if (!form.complainant) return showToast("Enter complainant");
+    const newB = { id: `BR-${String(blotters.length+10).padStart(4,'0')}`, complainant: form.complainant, incident: form.incident || "General Complaint", date: new Date().toLocaleDateString(), status: "Pending" };
+    setBlotters([newB, ...blotters]);
+    setShowForm(false);
+    setForm({ complainant:"", incident:"", description:"" });
+    showToast(`Blotter ${newB.id} filed - ${BARANGAY}`);
+  };
+
+  return (
+    <div>
+      <div style={styles.pageHeader}><div><h2>Blotter Reports - {BARANGAY}</h2><p>Manage incident reports for SAN AGUSTINE.</p></div><button style={styles.primaryButton} onClick={() => setShowForm(!showForm)}>{showForm ? "Close Form" : "+ New Blotter Report"}</button></div>
+      {showForm && (
+        <div style={styles.formCard}><h3>Create Blotter Report - {BARANGAY}</h3>
+          <input style={styles.input} placeholder="Complainant Name" value={form.complainant} onChange={e=>setForm({...form, complainant:e.target.value})} />
+          <input style={styles.input} placeholder="Incident Type" value={form.incident} onChange={e=>setForm({...form, incident:e.target.value})} />
+          <textarea style={styles.textarea} placeholder="Description" value={form.description} onChange={e=>setForm({...form, description:e.target.value})}></textarea>
+          <button style={styles.primaryButton} onClick={handleSubmit}>Submit Report</button>
+        </div>
+      )}
+      <div style={styles.tableCard}><div style={styles.tableWrapper}><table style={styles.table}><thead><tr><th>Report ID</th><th>Complainant</th><th>Incident</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody>{blotters.map(r => (<tr key={r.id}><td>{r.id}</td><td>{r.complainant}</td><td>{r.incident}</td><td>{r.date}</td><td><span style={styles.statusBadge}>{r.status}</span></td><td><button style={styles.viewButton} onClick={()=>setDetail(r)}>View</button></td></tr>))}</tbody>
+      </table></div></div>
+      {detail && <div style={styles.modalOverlay} onClick={()=>setDetail(null)}><div style={styles.modal} onClick={e=>e.stopPropagation()}><h3>{detail.id} - {BARANGAY}</h3><p><b>Complainant:</b> {detail.complainant}</p><p><b>Incident:</b> {detail.incident}</p><p><b>Status:</b> {detail.status}</p><div style={{display:'flex', gap:'8px', marginTop:'12px'}}>{["Pending","Under Review","Resolved"].map(s=> <button key={s} style={{...styles.viewButton, background: detail.status===s ? '#2563eb':'#eff6ff', color: detail.status===s ? 'white':'#2563eb'}} onClick={()=>{ setBlotters(blotters.map(b=> b.id===detail.id ? {...b, status:s}:b)); setDetail({...detail, status:s}); showToast(`Status: ${s}`); }}>{s}</button>)}<button style={styles.secondaryButton} onClick={()=>setDetail(null)}>Close</button></div></div></div>}
+    </div>
+  );
+}
+
+const styles = {
+  toast: { position:'fixed', top:'20px', right:'20px', background:'#0f172a', color:'white', padding:'12px 18px', borderRadius:'10px', zIndex:9999, fontSize:'13px', boxShadow:'0 10px 30px rgba(0,0,0,0.2)' },
+  lockedBadge: { position:'absolute', top:'12px', right:'12px', background:'#fee2e2', color:'#dc2626', fontSize:'10px', fontWeight:'bold', padding:'5px 10px', borderRadius:'20px' },
+  modalOverlay: { position:'fixed', inset:0, background:'rgba(15,23,42,0.5)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:1000, padding:'20px' },
+  modal: { background:'white', padding:'25px', borderRadius:'14px', maxWidth:'450px', width:'100%', boxShadow:'0 20px 50px rgba(0,0,0,0.2)' },
+  secondaryButton: { padding:'10px 16px', background:'#f1f5f9', color:'#334155', border:'none', borderRadius:'8px', cursor:'pointer', fontWeight:'bold' },
+  dot: { width:'10px', height:'10px', borderRadius:'50%', marginTop:'5px', flexShrink:0 },
+  loginPage: { minHeight:"100vh", display:"flex", justifyContent:"center", alignItems:"center", background:"linear-gradient(135deg, #dbeafe, #f8fafc)", padding:"20px", fontFamily:"Arial, sans-serif" },
+  loginCard: { width:"100%", maxWidth:"430px", background:"#ffffff", padding:"35px", borderRadius:"20px", boxShadow:"0 15px 45px rgba(0, 0, 0, 0.10)", textAlign:"center" },
+  logoCircle: { width:"75px", height:"75px", margin:"0 auto 18px", borderRadius:"50%", background:"#dbeafe", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"38px" },
+  loginTitle: { color:"#1e3a8a", fontSize:"22px", margin:"0 0 8px" },
+  loginSubtitle: { color:"#64748b", fontSize:"13px", marginBottom:"15px", fontWeight:'bold' },
+  label: { display:"block", textAlign:"left", color:"#334155", fontSize:"13px", fontWeight:"bold", marginBottom:"7px" },
+  input: { width:"100%", padding:"13px", marginBottom:"16px", border:"1px solid #cbd5e1", borderRadius:"9px", fontSize:"14px", outline:"none", boxSizing:"border-box" },
+  textarea: { width:"100%", minHeight:"100px", padding:"13px", marginBottom:"16px", border:"1px solid #cbd5e1", borderRadius:"9px", fontSize:"14px", resize:"vertical", boxSizing:"border-box" },
+  forgotContainer: { textAlign:"right", marginBottom:"18px" },
+  linkButton: { background:"none", border:"none", color:"#2563eb", cursor:"pointer", padding:0, fontSize:"13px" },
+  loginButton: { width:"100%", padding:"14px", background:"#1d4ed8", color:"#ffffff", border:"none", borderRadius:"9px", cursor:"pointer", fontWeight:"bold", fontSize:"15px" },
+  divider: { display:"flex", alignItems:"center", justifyContent:"center", margin:"22px 0", color:"#94a3b8", fontSize:"12px" },
+  googleButton: { width:"100%", padding:"13px", background:"#ffffff", color:"#334155", border:"1px solid #cbd5e1", borderRadius:"9px", cursor:"pointer", fontSize:"14px", display:"flex", alignItems:"center", justifyContent:"center", gap:"10px" },
+  googleIcon: { fontWeight:"bold", fontSize:"18px", color:"#4285f4" },
+  signupText: { color:"#64748b", fontSize:"13px", marginTop:"25px" },
+  modulePage: { minHeight:"100vh", background:"#f8fafc", fontFamily:"Arial, sans-serif" },
+  moduleTopbar: { background:"#ffffff", padding:"18px 35px", display:"flex", justifyContent:"space-between", alignItems:"center", borderBottom:"1px solid #e2e8f0", gap:"20px", flexWrap:"wrap" },
+  brandArea: { display:"flex", alignItems:"center", gap:"12px" },
+  smallLogo: { width:"45px", height:"45px", borderRadius:"12px", background:"#dbeafe", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"24px" },
+  brandTitle: { margin:0, fontSize:"18px", color:"#1e3a8a" },
+  brandSubtitle: { margin:"4px 0 0", fontSize:"11px", color:"#64748b", fontWeight:'bold' },
+  userArea: { display:"flex", alignItems:"center", gap:"18px" },
+  userInfo: { display:"flex", flexDirection:"column", textAlign:"right", fontSize:"13px", color:"#334155" },
+  logoutButton: { padding:"10px 18px", background:"#dc2626", color:"#ffffff", border:"none", borderRadius:"8px", cursor:"pointer", fontWeight:"bold" },
+  moduleContent: { maxWidth:"1150px", margin:"0 auto", padding:"45px 25px" },
+  welcomeBox: { textAlign:"center", marginBottom:"38px" },
+  moduleGrid: { display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(280px, 1fr))", gap:"25px" },
+  moduleCard: { background:"#ffffff", borderRadius:"18px", padding:"32px", textAlign:"center", boxShadow:"0 8px 25px rgba(0,0,0,0.07)", border:"1px solid #e2e8f0", position:'relative' },
+  moduleIcon: { width:"85px", height:"85px", borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 20px", fontSize:"42px" },
+  moduleTitle: { color:"#1e293b", fontSize:"21px", marginBottom:"12px" },
+  moduleDescription: { color:"#64748b", lineHeight:1.6, minHeight:"75px", fontSize:"14px" },
+  moduleButton: { marginTop:"18px", padding:"12px 20px", color:"#ffffff", border:"none", borderRadius:"8px", cursor:"pointer", fontWeight:"bold" },
+  dashboardLayout: { display:"flex", minHeight:"100vh", background:"#f8fafc", fontFamily:"Arial, sans-serif" },
+  sidebar: { width:"260px", background:"#0f172a", color:"#ffffff", padding:"24px 16px", display:"flex", flexDirection:"column", boxSizing:"border-box" },
+  sidebarBrand: { display:"flex", alignItems:"center", gap:"10px", padding:"0 10px 25px", borderBottom:"1px solid #334155" },
+  sidebarLogo: { width:"43px", height:"43px", background:"#1d4ed8", borderRadius:"10px", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"23px" },
+  sidebarTitle: { margin:0, fontSize:"18px" },
+  sidebarSubtitle: { margin:"3px 0 0", color:"#94a3b8", fontSize:"10px" },
+  moduleBadge: { background:"#1e293b", borderRadius:"10px", padding:"13px", margin:"22px 0", display:"flex", flexDirection:"column", gap:"6px" },
+  sidebarNav: { display:"flex", flexDirection:"column", gap:"7px" },
+  menuLabel: { color:"#64748b", fontSize:"11px", fontWeight:"bold", padding:"0 12px", marginBottom:"5px" },
+  sidebarMenu: { width:"100%", display:"flex", alignItems:"center", gap:"13px", padding:"13px 14px", background:"transparent", border:"none", borderRadius:"9px", color:"#cbd5e1", cursor:"pointer", textAlign:"left", fontSize:"14px" },
+  sidebarMenuActive: { background:"#2563eb", color:"#ffffff" },
+  sidebarBottom: { marginTop:"auto", display:"flex", flexDirection:"column", gap:"10px", paddingTop:"25px" },
+  changeModuleButton: { padding:"12px", background:"#1e293b", color:"#cbd5e1", border:"none", borderRadius:"8px", cursor:"pointer" },
+  sidebarLogout: { padding:"12px", background:"#7f1d1d", color:"#ffffff", border:"none", borderRadius:"8px", cursor:"pointer" },
+  mainContent: { flex:1, minWidth:0 },
+  dashboardTopbar: { background:"#ffffff", padding:"25px 35px", display:"flex", justifyContent:"space-between", alignItems:"center", borderBottom:"1px solid #e2e8f0", gap:"20px", flexWrap:"wrap" },
+  breadcrumb: { color:"#94a3b8", fontSize:"11px", margin:"0 0 8px", fontWeight:'bold' },
+  pageTitle: { margin:0, color:"#1e293b", fontSize:"22px" },
+  dashboardUser: { display:"flex", alignItems:"center", gap:"10px" },
+  avatar: { width:"42px", height:"42px", borderRadius:"50%", background:"#dbeafe", color:"#1d4ed8", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:"bold", fontSize:"18px" },
+  pageContent: { padding:"30px 35px" },
+  dashboardWelcome: { background:"linear-gradient(135deg, #1d4ed8, #2563eb)", color:"#ffffff", borderRadius:"16px", padding:"25px", display:"flex", justifyContent:"space-between", alignItems:"center", gap:"20px", flexWrap:"wrap", marginBottom:"25px" },
+  dateBox: { background:"rgba(255,255,255,0.18)", padding:"12px 15px", borderRadius:"9px", display:"flex", gap:"8px" },
+  statsGrid: { display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(200px, 1fr))", gap:"18px", marginBottom:"25px" },
+  statCard: { background:"#ffffff", padding:"22px", borderRadius:"14px", display:"flex", alignItems:"center", gap:"15px", border:"1px solid #e2e8f0", cursor:'pointer' },
+  statIcon: { width:"50px", height:"50px", borderRadius:"12px", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"25px" },
+  statTitle: { color:"#64748b", fontSize:"13px", margin:0 },
+  statValue: { color:"#1e293b", fontSize:"25px", margin:"7px 0 0" },
+  sectionGrid: { display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(300px, 1fr))", gap:"25px" },
+  contentCard: { background:"#ffffff", borderRadius:"14px", padding:"23px", border:"1px solid #e2e8f0" },
+  cardHeader: { display:"flex", justifyContent:"space-between", alignItems:"center", gap:"15px", marginBottom:"20px" },
+  quickActions: { display:"grid", gap:"12px" },
+  quickActionButton: { display:"flex", alignItems:"center", gap:"12px", padding:"15px", background:"#f8fafc", border:"1px solid #e2e8f0", borderRadius:"10px", cursor:"pointer", textAlign:"left", color:"#334155" },
+  activityList: { display:"flex", flexDirection:"column", gap:"18px" },
+  activityItem: { display:"flex", gap:"12px" },
+  pageHeader: { display:"flex", justifyContent:"space-between", alignItems:"center", gap:"15px", flexWrap:"wrap", marginBottom:"25px" },
+  primaryButton: { padding:"12px 18px", background:"#2563eb", color:"#ffffff", border:"none", borderRadius:"8px", cursor:"pointer", fontWeight:"bold" },
+  formCard: { background:"#ffffff", padding:"25px", borderRadius:"14px", border:"1px solid #e2e8f0", marginBottom:"25px", maxWidth:"650px" },
+  tableCard: { background:"#ffffff", borderRadius:"14px", border:"1px solid #e2e8f0", padding:"22px" },
+  tableWrapper: { overflowX:"auto" },
+  table: { width:"100%", borderCollapse:"collapse", minWidth:"750px" },
+  statusBadge: { display:"inline-block", padding:"6px 10px", borderRadius:"20px", fontSize:"11px", fontWeight:"bold", background:'#dbeafe', color:'#1d4ed8' },
+  viewButton: { padding:"7px 13px", background:"#eff6ff", color:"#2563eb", border:"none", borderRadius:"6px", cursor:"pointer" },
+  announcementGrid: { display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(280px, 1fr))", gap:"20px" },
+  announcementCard: { background:"#ffffff", border:"1px solid #e2e8f0", borderRadius:"14px", padding:"22px", display:"flex", gap:"15px" },
+  announcementIcon: { width:"45px", height:"45px", borderRadius:"10px", background:"#dbeafe", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"22px", flexShrink:0 },
+  textButton: { border:"none", background:"none", color:"#2563eb", cursor:"pointer", padding:0, fontWeight:"bold" },
+};
