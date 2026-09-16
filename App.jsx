@@ -10,9 +10,9 @@ const COLORS = {
 };
 
 const INITIAL_USERS = [
-{ email: "resident@gmail.com", password: "123", role: "Resident" },
-{ email: "captain@gmail.com", password: "123", role: "Captain" },
-{ email: "secretary@gmail.com", password: "123", role: "Secretary" },
+{ email: "resident@gmail.com", password: "res123", role: "Resident" },
+{ email: "captain@gmail.com", password: "cap123", role: "Captain" },
+{ email: "secretary@gmail.com", password: "sec123", role: "Secretary" },
 ];
 
 export default function App() {
@@ -29,9 +29,9 @@ const [documents, setDocuments] = useState([
 { id: "DOC-003", resident: "Pedro Reyes", type: "Certificate of Indigency", date: "September 12, 2026", status: "Processing" },
 ]);
 const [announcements, setAnnouncements] = useState([
-{ id: 1, title: "Barangay General Assembly", date: "September 20, 2026", description: "All residents are invited to attend the barangay general assembly at Brgy Hall of SAN AGUSTINE." },
-{ id: 2, title: "Clean-up Drive", date: "September 22, 2026", description: "Community clean-up drive will be held at the covered court of SAN AGUSTINE." },
-{ id: 3, title: "Health Check-up", date: "September 25, 2026", description: "Free medical check-up for residents of SAN AGUSTINE." },
+{ id: 1, title: "Barangay General Assembly", date: "September 20, 2026", description: "All residents are invited to attend the barangay general assembly at Brgy Hall of SAN AGUSTIN." },
+{ id: 2, title: "Clean-up Drive", date: "September 22, 2026", description: "Community clean-up drive will be held at the covered court of SAN AGUSTIN." },
+{ id: 3, title: "Health Check-up", date: "September 25, 2026", description: "Free medical check-up for residents of SAN AGUSTIN." },
 ]);
 const [blotters, setBlotters] = useState([
 { id: "BR-0012", complainant: "Juan Dela Cruz", incident: "Noise Complaint", date: "September 14, 2026", status: "Under Review" },
@@ -128,7 +128,7 @@ return (
 <h1 style={styles.loginTitle}>Barangay Management System</h1>
 <p style={styles.loginSubtitle}>{BARANGAY}</p>
 <div style={{background:'#f1f5f9', padding:'10px', borderRadius:'8px', marginBottom:'15px', fontSize:'11px', textAlign:'left'}}>
-<b>Demo Accounts (password: 123):</b><br/>
+<b>Demo Accounts (password: res123,cap123,sec123):</b><br/>
 resident@gmail.com - Resident<br/>
 captain@gmail.com - Captain<br/>
 secretary@gmail.com - Secretary
