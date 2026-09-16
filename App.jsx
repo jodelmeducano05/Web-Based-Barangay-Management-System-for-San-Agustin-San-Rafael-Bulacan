@@ -3,6 +3,11 @@ import barangayLogo from "./barangay-logo.jpg";
 
 const BARANGAY = "SAN AGUSTINE, SAN RAFAEL, BULACAN";
 
+const Color = {
+primary: "#213359",
+Secondary: "#4ADE80"
+}
+  
 const INITIAL_USERS = [
 { email: "resident@gmail.com", password: "123", role: "Resident" },
 { email: "captain@gmail.com", password: "123", role: "Captain" },
