@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import barangayLogo from "./barangay-logo.jpg";
 
-const BARANGAY = "SAN AGUSTINE, SAN RAFAEL, BULACAN";
+const BARANGAY = "SAN AGUSTIN, SAN RAFAEL, BULACAN";
 
 // ===== 2 COLORS ONLY - YUNG HINAHANAP MO =====
 const COLORS = {
