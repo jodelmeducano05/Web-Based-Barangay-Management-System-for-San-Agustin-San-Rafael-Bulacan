@@ -462,7 +462,7 @@ moduleDescription: { color:"#64748b", lineHeight:1.6, minHeight:"75px", fontSize
 moduleButton: { marginTop:"18px", padding:"12px 20px", color:"#ffffff", border:"none", borderRadius:"8px", cursor:"pointer", fontWeight:"bold" },
 // SIDEBAR - DALAWA LANG KULAY
 dashboardLayout: { display:"flex", minHeight:"100vh", background:"#f8fafc", fontFamily:"Arial, sans-serif" },
-sidebar: { width:"260px", background:`linear-gradient(180deg, ${COLORS.primary} 0%, ${COLORS.primary} 50%, ${COLORS.secondary} 100%)`, color:"#ffffff", padding:"24px 16px", display:"flex", flexDirection:"column", boxSizing:"border-box", borderRight:`3px solid ${COLORS.secondary}` },
+sidebar: { width:"260px", background:COLORS.primary, color:"#ffffff", padding:"24px 16px", display:"flex", flexDirection:"column", boxSizing:"border-box", borderRight:`3px solid ${COLORS.secondary}` },
 sidebarBrand: { display:"flex", alignItems:"center", gap:"10px", padding:"0 10px 25px", borderBottom:`1px solid ${COLORS.secondary}` },
 sidebarLogo: { width:"43px", height:"43px", borderRadius:"10px", objectFit:"cover", background:"white", border:`2px solid ${COLORS.secondary}` },
 sidebarTitle: { margin:0, fontSize:"18px", color:"white" },
