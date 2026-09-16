@@ -5,7 +5,6 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
-# Ito yung kulang sayo kaya hindi lumalabas deploy
 permissions:
   contents: read
   pages: write
@@ -26,10 +25,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          # tinanggal ko yung cache para di na hanapin package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build
         run: npm run build
