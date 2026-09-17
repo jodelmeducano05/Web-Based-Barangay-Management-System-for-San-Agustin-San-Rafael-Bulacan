@@ -1,12 +1,21 @@
 import React, { useState } from "react";
 import barangayLogo from "./barangay-logo.jpg";
+
 const BARANGAY = "SAN AGUSTIN, SAN RAFAEL, BULACAN";
 const COLORS = { primary: "#213359", secondary: "#4ADE80" };
+
+// ===== PALITAN MO CODE DITO KUNG GUSTO MO =====
+const ROLE_CODES = {
+  Captain: "CAPTAIN2026",
+  Secretary: "SECRETARY2026"
+};
+
 const INITIAL_USERS = [
   { email: "resident@gmail.com", password: "res123", role: "Resident" },
   { email: "captain@gmail.com", password: "cap123", role: "Captain" },
   { email: "secretary@gmail.com", password: "sec123", role: "Secretary" },
 ];
+
 export default function App() {
   const [users, setUsers] = useState(INITIAL_USERS);
   const [user, setUser] = useState(null);
@@ -17,7 +26,7 @@ export default function App() {
   const [documents, setDocuments] = useState([
     { id: "DOC-001", resident: "Juan Dela Cruz", type: "Barangay Clearance", date: "September 14, 2026", status: "Pending" },
     { id: "DOC-002", resident: "Maria Santos", type: "Certificate of Residency", date: "September 13, 2026", status: "Verified" },
-    { id: "DOC-003", resident: "【entity-Pedro Reyes¦canonical_name=Pedro Reyes】", type: "Certificate of Indigency", date: "September 12, 2026", status: "Approved" },
+    { id: "DOC-003", resident: "Pedro Reyes", type: "Certificate of Indigency", date: "September 12, 2026", status: "Approved" },
   ]);
   const [announcements, setAnnouncements] = useState([
     { id: 1, title: "Barangay General Assembly", date: "September 20, 2026", description: "All residents are invited to attend the barangay general assembly at Brgy Hall of SAN AGUSTIN." },
@@ -27,51 +36,118 @@ export default function App() {
   const [blotters, setBlotters] = useState([
     { id: "BR-0012", complainant: "Juan Dela Cruz", incident: "Noise Complaint", date: "September 14, 2026", status: "Pending" },
     { id: "BR-0011", complainant: "Maria Santos", incident: "Dispute", date: "September 13, 2026", status: "Under Review" },
-    { id: "BR-0010", complainant: "【entity-Pedro Reyes¦canonical_name=Pedro Reyes】", incident: "Property Concern", date: "September 12, 2026", status: "Resolved" },
+    { id: "BR-0010", complainant: "Pedro Reyes", incident: "Property Concern", date: "September 12, 2026", status: "Resolved" },
   ]);
+
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(null), 3000); };
   const handleLogin = (email, password) => {
     const found = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
     if (!found) { showToast("Mali ang email o password!"); return; }
     setUser(found); setStage("modules"); showToast(`Welcome ${found.role} - ${found.email}`);
   };
-  const handleGoogleLogin = () => { const googleUser = { email: "Google User", role: "Resident", password: "google" }; setUser(googleUser); setStage("modules"); };
+  const handleGoogleLogin = () => {
+    const googleUser = { email: "Google User", role: "Resident", password: "google" };
+    setUser(googleUser); setStage("modules");
+  };
   const handleLogout = () => { setUser(null); setSelectedModule(null); setActivePage("Dashboard"); setStage("login"); };
   const handleModuleSelect = (modName) => {
     const modRole = modName.replace(" Dashboard", "");
     if (user.role !== modRole) { showToast(`⛔ ACCESS DENIED: ${user.role} ka lang. Hindi mo pwedeng buksan ang ${modRole} Dashboard!`); return; }
-    setSelectedModule(modName); setStage("app"); setActivePage("Dashboard"); showToast(`Opened ${modName} - ${BARANGAY}`);
+    setSelectedModule(modName); setStage("app"); setActivePage("Dashboard");
   };
-  if (stage === "login") return <Login onLogin={handleLogin} onGoogleLogin={handleGoogleLogin} users={users} setUsers={setUsers} toast={toast} showToast={showToast} />;
-  if (stage === "modules") return <DashboardModules onSelect={handleModuleSelect} logout={handleLogout} user={user} toast={toast} showToast={showToast} />;
-  return (<><Toast msg={toast} /><DashboardLayout user={user} selectedModule={selectedModule} activePage={activePage} setActivePage={setActivePage} logout={handleLogout} backToModules={() => setStage("modules")} documents={documents} setDocuments={setDocuments} announcements={announcements} setAnnouncements={setAnnouncements} blotters={blotters} setBlotters={setBlotters} showToast={showToast} /></>);
+
+  if (stage === "login") return <Login onLogin={handleLogin} onGoogleLogin={handleGoogleLogin} users={users} setUsers={setUsers} showToast={showToast} />;
+  if (stage === "modules") return <DashboardModules onSelect={handleModuleSelect} logout={handleLogout} user={user} />;
+  return (
+    <>
+      {toast && <div style={styles.toast}>{toast}</div>}
+      <DashboardLayout user={user} selectedModule={selectedModule} activePage={activePage} setActivePage={setActivePage} logout={handleLogout} backToModules={() => setStage("modules")} documents={documents} setDocuments={setDocuments} announcements={announcements} setAnnouncements={setAnnouncements} blotters={blotters} setBlotters={setBlotters} showToast={showToast} />
+    </>
+  );
 }
-function Toast({ msg }) { if (!msg) return null; return <div style={styles.toast}>{msg}</div>; }
+
 function Login({ onLogin, onGoogleLogin, users, setUsers, showToast }) {
-  const [email, setEmail] = useState(""); const [password, setPassword] = useState(""); const [showForgot, setShowForgot] = useState(false); const [showSignup, setShowSignup] = useState(false);
-  const [signupData, setSignupData] = useState({ name: "", email: "", password: "", role: "Resident" });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showForgot, setShowForgot] = useState(false);
+  const [showSignup, setShowSignup] = useState(false);
+  const [signupData, setSignupData] = useState({ name: "", email: "", password: "", role: "Resident", accessCode: "" });
+
   const handleSignup = () => {
     if(!signupData.name || !signupData.email || !signupData.password) return showToast("Kumpletuhin ang form");
     if(users.find(u => u.email.toLowerCase() === signupData.email.toLowerCase())){ return showToast("May account na sa email na yan"); }
-    setUsers([...users, { email: signupData.email, password: signupData.password, role: signupData.role, name: signupData.name }]);
-    setShowSignup(false); showToast(`Account created as ${signupData.role}! Pwede ka na mag login.`);
-  }
+    
+    if(signupData.role === "Captain" || signupData.role === "Secretary"){
+      const requiredCode = ROLE_CODES[signupData.role];
+      if(!signupData.accessCode) return showToast(`Kailangan ng Access Code para sa ${signupData.role}!`);
+      if(signupData.accessCode !== requiredCode) return showToast(`⛔ Mali ang Access Code para sa ${signupData.role}!`);
+    }
+
+    const newUser = { email: signupData.email, password: signupData.password, role: signupData.role, name: signupData.name };
+    setUsers([...users, newUser]);
+    setShowSignup(false);
+    showToast(`Account created as ${signupData.role}!`);
+    setSignupData({ name: "", email: "", password: "", role: "Resident", accessCode: "" });
+  };
+
   return (
-    <div style={styles.loginPage}><div style={styles.loginCard}>
-      <img src={barangayLogo} alt="Barangay Logo" style={styles.logoCircle} /><h1 style={styles.loginTitle}>Barangay Management System</h1><p style={styles.loginSubtitle}>{BARANGAY}</p>
-      <div style={{background:'#f1f5f9', padding:'10px', borderRadius:'8px', marginBottom:'15px', fontSize:'11px', textAlign:'left'}}><b>Demo:</b><br/>resident@gmail.com / res123<br/>captain@gmail.com / cap123<br/>secretary@gmail.com / sec123</div>
-      <form onSubmit={(e) => { e.preventDefault(); if (!email || !password) return showToast("Please enter email and password"); onLogin(email, password); }}>
-        <label style={styles.label}>Email Address</label><input type="email" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} style={styles.input} />
-        <label style={styles.label}>Password</label><input type="password" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} style={styles.input} />
-        <div style={styles.forgotContainer}><button type="button" style={styles.linkButton} onClick={() => setShowForgot(true)}>Forgot Password?</button></div><button type="submit" style={styles.loginButton}>Login</button>
-      </form><div style={styles.divider}><span>OR</span></div><button style={styles.googleButton} onClick={onGoogleLogin}><span style={styles.googleIcon}>G</span> Continue as Resident (Google)</button>
-      <p style={styles.signupText}>Don't have an account? <button style={styles.linkButton} onClick={() => setShowSignup(true)}>Sign Up</button></p>
-    </div>
-      {showForgot && (<div style={styles.modalOverlay} onClick={() => setShowForgot(false)}><div style={styles.modal} onClick={e => e.stopPropagation()}><h3>Reset Password - {BARANGAY}</h3><input style={styles.input} placeholder="your@email.com" /><div style={{display:'flex', gap:'10px', marginTop:'15px'}}><button style={styles.primaryButton} onClick={() => { setShowForgot(false); showToast("Reset link sent!"); }}>Send Link</button><button style={styles.secondaryButton} onClick={() => setShowForgot(false)}>Cancel</button></div></div></div>)}
-      {showSignup && (<div style={styles.modalOverlay} onClick={() => setShowSignup(false)}><div style={styles.modal} onClick={e => e.stopPropagation()}><h3>Create Account - {BARANGAY}</h3><input style={styles.input} placeholder="Full Name" value={signupData.name} onChange={e=>setSignupData({...signupData, name:e.target.value})} /><input style={styles.input} placeholder="Email" value={signupData.email} onChange={e=>setSignupData({...signupData, email:e.target.value})} /><input style={styles.input} placeholder="Password" type="password" value={signupData.password} onChange={e=>setSignupData({...signupData, password:e.target.value})} /><label style={styles.label}>Select Role</label><select style={styles.input} value={signupData.role} onChange={e=>setSignupData({...signupData, role:e.target.value})}><option value="Resident">Resident</option><option value="Captain">Captain</option><option value="Secretary">Secretary</option></select><div style={{display:'flex', gap:'10px', marginTop:'15px'}}><button style={styles.primaryButton} onClick={handleSignup}>Sign Up as {signupData.role}</button><button style={styles.secondaryButton} onClick={() => setShowSignup(false)}>Cancel</button></div></div></div>)}
+    <div style={styles.loginPage}>
+      <div style={styles.loginCard}>
+        <img src={barangayLogo} alt="Barangay Logo" style={styles.logoCircle} />
+        <h1 style={styles.loginTitle}>Barangay Management System</h1>
+        <p style={styles.loginSubtitle}>{BARANGAY}</p>
+        <div style={{background:'#f1f5f9', padding:'10px', borderRadius:'8px', marginBottom:'15px', fontSize:'11px', textAlign:'left'}}>
+          <b>Demo:</b><br/>resident@gmail.com / res123<br/>captain@gmail.com / cap123<br/>secretary@gmail.com / sec123<br/>
+          <span style={{color:'#16a34a', fontWeight:'bold'}}>Code: CAPTAIN2026 / SECRETARY2026</span>
+        </div>
+        <form onSubmit={(e) => { e.preventDefault(); onLogin(email, password); }}>
+          <label style={styles.label}>Email Address</label>
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} style={styles.input} />
+          <label style={styles.label}>Password</label>
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} style={styles.input} />
+          <div style={styles.forgotContainer}><button type="button" style={styles.linkButton} onClick={() => setShowForgot(true)}>Forgot Password?</button></div>
+          <button type="submit" style={styles.loginButton}>Login</button>
+        </form>
+        <div style={styles.divider}><span>OR</span></div>
+        <button style={styles.googleButton} onClick={onGoogleLogin}><span style={styles.googleIcon}>G</span> Continue as Resident (Google)</button>
+        <p style={styles.signupText}>Don't have an account? <button style={styles.linkButton} onClick={() => setShowSignup(true)}>Sign Up</button></p>
+      </div>
+
+      {showForgot && (<div style={styles.modalOverlay} onClick={() => setShowForgot(false)}><div style={styles.modal} onClick={e => e.stopPropagation()}><h3>Reset Password - {BARANGAY}</h3><p style={{color:'#64748b', fontSize:'13px'}}>Enter your email to receive reset link</p><input style={styles.input} placeholder="your@email.com" /><div style={{display:'flex', gap:'10px', marginTop:'15px'}}><button style={styles.primaryButton} onClick={() => { setShowForgot(false); showToast("Reset link sent!"); }}>Send Link</button><button style={styles.secondaryButton} onClick={() => setShowForgot(false)}>Cancel</button></div></div></div>)}
+
+      {showSignup && (
+        <div style={styles.modalOverlay} onClick={() => setShowSignup(false)}>
+          <div style={styles.modal} onClick={e=>e.stopPropagation()}>
+            <h3>Create Account - {BARANGAY}</h3>
+            <input style={styles.input} placeholder="Full Name" value={signupData.name} onChange={e=>setSignupData({...signupData, name:e.target.value})} />
+            <input style={styles.input} placeholder="Email" value={signupData.email} onChange={e=>setSignupData({...signupData, email:e.target.value})} />
+            <input style={styles.input} placeholder="Password" type="password" value={signupData.password} onChange={e=>setSignupData({...signupData, password:e.target.value})} />
+            <label style={styles.label}>Select Role</label>
+            <select style={styles.input} value={signupData.role} onChange={e=>setSignupData({...signupData, role:e.target.value, accessCode:""})}>
+              <option value="Resident">Resident - No Code Needed</option>
+              <option value="Captain">Captain - Need Code</option>
+              <option value="Secretary">Secretary - Need Code</option>
+            </select>
+
+            {(signupData.role === "Captain" || signupData.role === "Secretary") && (
+              <div style={{background:'#fef9c3', padding:'10px', borderRadius:'8px', border:'1px solid #fde047', marginBottom:'12px'}}>
+                <label style={{...styles.label, color:'#854d0e'}}>🔒 Access Code for {signupData.role}</label>
+                <input style={{...styles.input, borderColor:'#eab308', marginBottom:'5px'}} placeholder={`Enter code for ${signupData.role}`} type="password" value={signupData.accessCode} onChange={e=>setSignupData({...signupData, accessCode:e.target.value})} />
+                <p style={{fontSize:'10px', color:'#854d0e', margin:'0'}}>Hingin ang code sa admin. Resident = no code.</p>
+              </div>
+            )}
+
+            <div style={{display:'flex', gap:'10px', marginTop:'15px'}}>
+              <button style={styles.primaryButton} onClick={handleSignup}>Sign Up as {signupData.role}</button>
+              <button style={styles.secondaryButton} onClick={() => setShowSignup(false)}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
 function DashboardModules({ onSelect, logout, user }) {
   const modules = [
     { name: "Resident Dashboard", role: "Resident", icon: "👥", color: COLORS.primary, description: "Nag-request ng documents at tumitingin ng sariling impormasyon at request status." },
@@ -79,10 +155,13 @@ function DashboardModules({ onSelect, logout, user }) {
     { name: "Secretary Dashboard", role: "Secretary", icon: "📝", color: COLORS.primary, description: "Nag-eencode, nag-aayos, at nagpo-process ng mga records at documents." },
   ];
   return (
-    <div style={styles.modulePage}><header style={styles.moduleTopbar}><div style={styles.brandArea}><img src={barangayLogo} alt="logo" style={styles.smallLogo} /><div><h2 style={styles.brandTitle}>Barangay Management System</h2><p style={styles.brandSubtitle}>{BARANGAY} | Role: {user.role}</p></div></div><div style={styles.userArea}><div style={styles.userInfo}><strong>{user.email}</strong><span style={{background: COLORS.secondary, color: COLORS.primary, padding:'2px 8px', borderRadius:'20px', fontSize:'10px', marginTop:'3px', fontWeight:'bold'}}>{user.role}</span></div><button style={styles.logoutButton} onClick={logout}>Logout</button></div></header>
-      <main style={styles.moduleContent}><div style={styles.welcomeBox}><h1>Welcome to Barangay SAN AGUSTIN</h1><p>Ikaw ay naka-login bilang <b>{user.role}</b>. Isang dashboard lang ang pwede mong buksan - {BARANGAY}</p></div><div style={styles.moduleGrid}>{modules.map((m) => { const isAllowed = user.role === m.role; return (<div key={m.name} style={{...styles.moduleCard, opacity: isAllowed ? 1 : 0.6, border: isAllowed ? `2px solid ${m.color}` : '1px solid #e2e8f0', cursor: isAllowed ? 'pointer' : 'not-allowed'}} onClick={() => onSelect(m.name)}>{!isAllowed && <div style={styles.lockedBadge}>🔒 LOCKED</div>}{isAllowed && <div style={{...styles.lockedBadge, background: COLORS.secondary, color: COLORS.primary}}>✅ ALLOWED</div>}<div style={{ ...styles.moduleIcon, background: `${m.color}18`, color: m.color }}>{m.icon}</div><h2 style={styles.moduleTitle}>{m.name}</h2><p style={styles.moduleDescription}>{m.description}</p><button style={{ ...styles.moduleButton, background: isAllowed ? m.color : '#94a3b8' }} onClick={(e) => { e.stopPropagation(); onSelect(m.name); }}>{isAllowed ? 'Open Dashboard →' : 'Access Denied 🔒'}</button></div>)})}</div></main></div>
+    <div style={styles.modulePage}>
+      <header style={styles.moduleTopbar}><div style={styles.brandArea}><img src={barangayLogo} alt="logo" style={styles.smallLogo} /><div><h2 style={styles.brandTitle}>Barangay Management System</h2><p style={styles.brandSubtitle}>{BARANGAY} | Role: {user.role}</p></div></div><div style={styles.userArea}><div style={styles.userInfo}><strong>{user.email}</strong><span style={{background: COLORS.secondary, color: COLORS.primary, padding:'2px 8px', borderRadius:'20px', fontSize:'10px', marginTop:'3px', fontWeight:'bold'}}>{user.role}</span></div><button style={styles.logoutButton} onClick={logout}>Logout</button></div></header>
+      <main style={styles.moduleContent}><div style={styles.welcomeBox}><h1>Welcome to Barangay SAN AGUSTIN</h1><p>Ikaw ay naka-login bilang <b>{user.role}</b>. Isang dashboard lang ang pwede mong buksan - {BARANGAY}</p></div><div style={styles.moduleGrid}>{modules.map((m) => { const isAllowed = user.role === m.role; return (<div key={m.name} style={{...styles.moduleCard, opacity: isAllowed ? 1 : 0.6, border: isAllowed ? `2px solid ${m.color}` : '1px solid #e2e8f0', cursor: isAllowed ? 'pointer' : 'not-allowed'}} onClick={() => onSelect(m.name)}>{!isAllowed && <div style={styles.lockedBadge}>🔒 LOCKED</div>}{isAllowed && <div style={{...styles.lockedBadge, background: COLORS.secondary, color: COLORS.primary}}>✅ ALLOWED</div>}<div style={{ ...styles.moduleIcon, background: `${m.color}18`, color: m.color }}>{m.icon}</div><h2 style={styles.moduleTitle}>{m.name}</h2><p style={styles.moduleDescription}>{m.description}</p><button style={{ ...styles.moduleButton, background: isAllowed ? m.color : '#94a3b8' }}>{isAllowed ? 'Open Dashboard →' : 'Access Denied 🔒'}</button></div>)})}</div></main>
+    </div>
   );
 }
+
 function DashboardLayout({ user, selectedModule, activePage, setActivePage, logout, backToModules, documents, setDocuments, announcements, setAnnouncements, blotters, setBlotters, showToast }) {
   const role = selectedModule.replace(" Dashboard", "");
   const menuItems = [{ name: "Dashboard", icon: "🏠" }, { name: "Documents", icon: "📄" }, { name: "Announcements", icon: "📢" }, { name: "Blotter Reports", icon: "📋" }];
@@ -91,7 +170,7 @@ function DashboardLayout({ user, selectedModule, activePage, setActivePage, logo
       <aside style={styles.sidebar}><div style={styles.sidebarBrand}><img src={barangayLogo} alt="logo" style={styles.sidebarLogo} /><div><h2 style={styles.sidebarTitle}>SAN AGUSTIN</h2><p style={styles.sidebarSubtitle}>{BARANGAY}</p></div></div><div style={styles.moduleBadge}><span style={{color: COLORS.secondary, fontSize:'11px'}}>Current Module</span><strong>{selectedModule}</strong><span style={{fontSize:'10px', background: COLORS.secondary, color: COLORS.primary, padding:'2px 6px', borderRadius:'10px', marginTop:'5px', width:'fit-content'}}>{user.role}</span></div><nav style={styles.sidebarNav}><p style={styles.menuLabel}>MAIN MENU</p>{menuItems.map((item) => (<button key={item.name} onClick={() => { setActivePage(item.name); showToast(`Opened ${item.name}`); }} style={{ ...styles.sidebarMenu, ...(activePage === item.name ? styles.sidebarMenuActive : {}) }}><span>{item.icon}</span><span>{item.name}</span></button>))}</nav><div style={styles.sidebarBottom}><button style={styles.changeModuleButton} onClick={() => { backToModules(); showToast("Changed module"); }}>Change Module</button><button style={styles.sidebarLogout} onClick={logout}>Logout</button></div></aside>
       <main style={styles.mainContent}><header style={styles.dashboardTopbar}><div><p style={styles.breadcrumb}>Home / {activePage} / {BARANGAY}</p><h1 style={styles.pageTitle}>{activePage}</h1></div><div style={styles.dashboardUser}><div style={styles.avatar}>{role.charAt(0)}</div><div><strong>{role}</strong><br/><span style={{fontSize:'11px', color:'#64748b'}}>{user.email}</span></div></div></header>
         <section style={styles.pageContent}>
-          {activePage === "Dashboard" && <DashboardHome role={role} selectedModule={selectedModule} setActivePage={setActivePage} showToast={showToast} documents={documents} blotters={blotters} />}
+          {activePage === "Dashboard" && <DashboardHome role={role} selectedModule={selectedModule} setActivePage={setActivePage} documents={documents} blotters={blotters} />}
           {activePage === "Documents" && <DocumentsPage role={role} documents={documents} setDocuments={setDocuments} showToast={showToast} />}
           {activePage === "Announcements" && <AnnouncementsPage role={role} announcements={announcements} setAnnouncements={setAnnouncements} showToast={showToast} />}
           {activePage === "Blotter Reports" && <BlotterReportsPage role={role} blotters={blotters} setBlotters={setBlotters} showToast={showToast} />}
@@ -101,13 +180,12 @@ function DashboardLayout({ user, selectedModule, activePage, setActivePage, logo
   );
 }
 
-// ===== DASHBOARD - BINALIK KO YUNG LAMAN =====
-function DashboardHome({ role, selectedModule, setActivePage, showToast, documents, blotters }) {
+function DashboardHome({ role, selectedModule, setActivePage, documents, blotters }) {
   const pendingDocs = documents.filter(d=>d.status === 'Pending').length;
   const verifiedDocs = documents.filter(d=>d.status === 'Verified').length;
   const stats = [
     { title: "Document Requests", value: documents.length, icon: "📄", color: COLORS.primary, page: "Documents" },
-    { title: "Pending Verification", value: role === 'Secretary' ? pendingDocs : pendingDocs, icon: "⏳", color: COLORS.secondary, page: "Documents" },
+    { title: "Pending Verification", value: pendingDocs, icon: "⏳", color: COLORS.secondary, page: "Documents" },
     { title: "For Captain Approval", value: verifiedDocs, icon: "✅", color: COLORS.primary, page: "Documents" },
     { title: "Blotter Reports", value: blotters.length, icon: "📋", color: COLORS.secondary, page: "Blotter Reports" },
   ];
@@ -130,6 +208,7 @@ function DashboardHome({ role, selectedModule, setActivePage, showToast, documen
     </div>
   );
 }
+
 function DocumentsPage({ role, documents, setDocuments, showToast }) {
   const [showForm, setShowForm] = useState(false); const [showDetail, setShowDetail] = useState(null); const [form, setForm] = useState({ resident: "", type: "Barangay Clearance" }); const [search, setSearch] = useState("");
   const handleSubmit = () => { if (!form.resident) return showToast("Enter resident name"); const newDoc = { id: `DOC-${String(documents.length+1).padStart(3,'0')}`, resident: form.resident, type: form.type, date: new Date().toLocaleDateString(), status: "Pending" }; setDocuments([newDoc, ...documents]); setForm({ resident: "", type: "Barangay Clearance" }); setShowForm(false); showToast(`Request Created - Pending for Secretary`); };
@@ -141,7 +220,7 @@ function DocumentsPage({ role, documents, setDocuments, showToast }) {
   const filtered = documents.filter(d => d.resident.toLowerCase().includes(search.toLowerCase()) || d.type.toLowerCase().includes(search.toLowerCase()));
   return (
     <div><div style={styles.pageHeader}><div><h2>Document Requests - {BARANGAY}</h2><p>{role === 'Resident' ? 'Mag-request at tingnan ang status.' : role === 'Secretary' ? 'Nag-eencode at nagpo-process ng documents.' : 'Nag-aapprove at nagre-review ng requests.'}</p></div>{role === "Resident" && <button style={styles.primaryButton} onClick={() => setShowForm(!showForm)}>{showForm ? "Close" : "+ New Request"}</button>}</div>
-      {showForm && role === "Resident" && (<div style={styles.formCard}><h3>Create Document Request</h3><input style={styles.input} placeholder="Resident Name - SAN AGUSTINE" value={form.resident} onChange={e => setForm({...form, resident:e.target.value})} /><select style={styles.input} value={form.type} onChange={e => setForm({...form, type:e.target.value})}><option>Barangay Clearance</option><option>Certificate of Residency</option><option>Certificate of Indigency</option><option>Business Clearance</option></select><button style={styles.primaryButton} onClick={handleSubmit}>Submit Request</button></div>)}
+      {showForm && role === "Resident" && (<div style={styles.formCard}><h3>Create Document Request</h3><input style={styles.input} placeholder="Resident Name" value={form.resident} onChange={e => setForm({...form, resident:e.target.value})} /><select style={styles.input} value={form.type} onChange={e => setForm({...form, type:e.target.value})}><option>Barangay Clearance</option><option>Certificate of Residency</option><option>Certificate of Indigency</option><option>Business Clearance</option></select><button style={styles.primaryButton} onClick={handleSubmit}>Submit Request</button></div>)}
       <div style={styles.tableCard}><div style={styles.cardHeader}><h3>Document List</h3><input style={{...styles.input, width:'200px', margin:0}} placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} /></div><div style={styles.tableWrapper}><table style={styles.table}><thead><tr><th>ID</th><th>Resident</th><th>Type</th><th>Date</th><th>Status</th><th>Action</th></tr></thead><tbody>{filtered.map(doc => (<tr key={doc.id}><td>{doc.id}</td><td>{doc.resident}</td><td>{doc.type}</td><td>{doc.date}</td><td><span style={{...styles.statusBadge, background: doc.status === 'Verified' ? '#dbeafe' : doc.status === 'Approved' ? '#dcfce7' : doc.status === 'Rejected' ? '#fee2e2' : '#fef9c3'}}>{doc.status}</span></td><td><button style={styles.viewButton} onClick={() => setShowDetail(doc)}>View</button></td></tr>))}</tbody></table></div></div>
       {showDetail && (<div style={styles.modalOverlay} onClick={() => setShowDetail(null)}><div style={styles.modal} onClick={e=>e.stopPropagation()}><h3>{showDetail.id} - {BARANGAY}</h3><p><b>Resident:</b> {showDetail.resident}</p><p><b>Type:</b> {showDetail.type}</p><p><b>Status:</b> {showDetail.status}</p><div style={{display:'flex', gap:'8px', marginTop:'15px', flexWrap:'wrap'}}>
         {role === "Secretary" && showDetail.status === "Pending" && (<button style={{...styles.primaryButton, background:'#3b82f6', color:'white'}} onClick={() => handleStatusChange(showDetail.id, "Verified")}>✓ Verified (Secretary)</button>)}
@@ -153,9 +232,10 @@ function DocumentsPage({ role, documents, setDocuments, showToast }) {
     </div>
   );
 }
+
 function BlotterReportsPage({ role, blotters, setBlotters, showToast }) {
   const [showForm, setShowForm] = useState(false); const [detail, setDetail] = useState(null); const [form, setForm] = useState({ complainant:"", incident:"", description:"" });
-  const handleSubmit = () => { if (!form.complainant) return showToast("Enter complainant"); const newB = { id: `BR-${String(blotters.length+10).padStart(4,'0')}`, complainant: form.complainant, incident: form.incident || "General Complaint", date: new Date().toLocaleDateString(), status: "Pending" }; setBlotters([newB, ...blotters]); setShowForm(false); setForm({ complainant:"", incident:"", description:"" }); showToast(`Blotter ${newB.id} filed - Pending for Secretary`); };
+  const handleSubmit = () => { if (!form.complainant) return showToast("Enter complainant"); const newB = { id: `BR-${String(blotters.length+10).padStart(4,'0')}`, complainant: form.complainant, incident: form.incident || "General Complaint", date: new Date().toLocaleDateString(), status: "Pending" }; setBlotters([newB, ...blotters]); setShowForm(false); setForm({ complainant:"", incident:"", description:"" }); showToast(`Blotter ${newB.id} filed`); };
   const handleBlotterStatus = (id, newStatus) => {
     if ((newStatus === "Under Review" || newStatus === "Processing") && role !== "Secretary") return showToast("⛔ Si Secretary lang pwede mag-process!");
     if ((newStatus === "Resolved" || newStatus === "Dismissed") && role !== "Captain") return showToast("⛔ Si Captain lang pwede mag-resolve!");
@@ -167,7 +247,7 @@ function BlotterReportsPage({ role, blotters, setBlotters, showToast }) {
       <div style={styles.tableCard}><div style={styles.tableWrapper}><table style={styles.table}><thead><tr><th>Report ID</th><th>Complainant</th><th>Incident</th><th>Date</th><th>Status</th><th>Action</th></tr></thead><tbody>{blotters.map(r => (<tr key={r.id}><td>{r.id}</td><td>{r.complainant}</td><td>{r.incident}</td><td>{r.date}</td><td><span style={{...styles.statusBadge, background: r.status === 'Under Review' ? '#dbeafe' : r.status === 'Resolved' ? '#dcfce7' : r.status === 'Dismissed' ? '#fee2e2' : '#fef9c3'}}>{r.status}</span></td><td><button style={styles.viewButton} onClick={()=>setDetail(r)}>View</button></td></tr>))}</tbody></table></div></div>
       {detail && <div style={styles.modalOverlay} onClick={()=>setDetail(null)}><div style={styles.modal} onClick={e=>e.stopPropagation()}><h3>{detail.id} - {BARANGAY}</h3><p><b>Complainant:</b> {detail.complainant}</p><p><b>Incident:</b> {detail.incident}</p><p><b>Status:</b> {detail.status}</p><div style={{display:'flex', gap:'8px', marginTop:'12px', flexWrap:'wrap'}}>
         {role === "Secretary" && detail.status === "Pending" && (<button style={{...styles.primaryButton, background:'#3b82f6', color:'white'}} onClick={()=>handleBlotterStatus(detail.id, "Under Review")}>📝 Process / Under Review (Secretary)</button>)}
-        {role === "Secretary" && detail.status !== "Pending" && <div style={styles.infoBox}>Na-process mo na. Si Captain na magre-review.</div>}
+        {role === "Secretary" && detail.status !== "Pending" && detail.status !== "Resolved" && detail.status !== "Dismissed" && <div style={styles.infoBox}>Na-process mo na. Si Captain na magre-review.</div>}
         {role === "Captain" && detail.status === "Under Review" && (<><button style={{...styles.primaryButton, background:'#22c55e', color:'white'}} onClick={()=>handleBlotterStatus(detail.id, "Resolved")}>✔ Resolve / Approve (Captain)</button><button style={{...styles.primaryButton, background:'#ef4444', color:'white'}} onClick={()=>handleBlotterStatus(detail.id, "Dismissed")}>✖ Dismiss (Captain)</button></>)}
         {role === "Captain" && detail.status === "Pending" && <div style={styles.infoBoxError}>⛔ Si Secretary muna mag-process bago mo i-review.</div>}
         {role === "Resident" && <div style={styles.infoBox}>View only - {detail.status}. Si Secretary mag-process, si Captain mag-approve.</div>}
@@ -175,12 +255,14 @@ function BlotterReportsPage({ role, blotters, setBlotters, showToast }) {
     </div>
   );
 }
+
 function AnnouncementsPage({ role, announcements, setAnnouncements, showToast }) {
   const [showForm, setShowForm] = useState(false); const [form, setForm] = useState({ title: "", date: "", description: "" }); const [detail, setDetail] = useState(null);
   const canManage = role === "Captain" || role === "Secretary";
   const handlePost = () => { if (!form.title) return showToast("Enter title"); setAnnouncements([{ id: Date.now(), ...form, date: form.date || new Date().toLocaleDateString() }, ...announcements]); setForm({ title:"", date:"", description:"" }); setShowForm(false); showToast(`Announcement posted - ${BARANGAY}`); };
   return (<div><div style={styles.pageHeader}><div><h2>Announcements - {BARANGAY}</h2><p>Latest barangay announcements.</p></div>{canManage && <button style={styles.primaryButton} onClick={() => setShowForm(!showForm)}>{showForm ? "Close Form" : "+ Add Announcement"}</button>}</div>{showForm && canManage && (<div style={styles.formCard}><h3>New Announcement - {BARANGAY}</h3><input style={styles.input} placeholder="Title" value={form.title} onChange={e=>setForm({...form, title:e.target.value})} /><input type="date" style={styles.input} value={form.date} onChange={e=>setForm({...form, date:e.target.value})} /><textarea style={styles.textarea} placeholder="Details - SAN AGUSTINE" value={form.description} onChange={e=>setForm({...form, description:e.target.value})}></textarea><button style={styles.primaryButton} onClick={handlePost}>Post Announcement</button></div>)}<div style={styles.announcementGrid}>{announcements.map(a => (<div style={styles.announcementCard} key={a.id}><div style={styles.announcementIcon}>📢</div><div><h3>{a.title}</h3><p style={{color: COLORS.secondary, fontSize:'12px'}}> {a.date} • {BARANGAY}</p><p style={{fontSize:'13px', color:'#475569'}}>{a.description}</p><div style={{display:'flex', gap:'8px', marginTop:'10px'}}><button style={styles.textButton} onClick={() => setDetail(a)}>Read More →</button>{canManage && <button style={styles.textButton} onClick={() => { setAnnouncements(announcements.filter(x=>x.id!==a.id)); showToast("Deleted"); }}>Delete</button>}</div></div></div>))}</div>{detail && <div style={styles.modalOverlay} onClick={()=>setDetail(null)}><div style={styles.modal} onClick={e=>e.stopPropagation()}><h3>{detail.title}</h3><p style={{fontSize:'12px', color:'#64748b'}}>{detail.date} • {BARANGAY}</p><p>{detail.description}</p><button style={styles.primaryButton} onClick={()=>setDetail(null)}>Close</button></div></div>}</div>);
 }
+
 const styles = {
   toast: { position:'fixed', top:'20px', right:'20px', background:COLORS.primary, color:'white', padding:'12px 18px', borderRadius:'10px', zIndex:9999, fontSize:'13px', boxShadow:'0 10px 30px rgba(0,0,0,0.2)' },
   lockedBadge: { position:'absolute', top:'12px', right:'12px', background:'#fee2e2', color:'#dc2626', fontSize:'10px', fontWeight:'bold', padding:'5px 10px', borderRadius:'20px' },
