@@ -1673,15 +1673,17 @@ function BlotterReportsPage({
           </p>
         </div>
 
-        <button
-          style={styles.primaryButton}
-          onClick={() => setShowForm(!showForm)}
-        >
-          {showForm ? "Close Form" : "+ New Blotter"}
-        </button>
+        {role !== "Secretary" && (
+          <button
+            style={styles.primaryButton}
+            onClick={() => setShowForm(!showForm)}
+          >
+            {showForm ? "Close Form" : "+ New Blotter"}
+          </button>
+        )}
       </div>
 
-      {showForm && (
+      {showForm && role !== "Secretary" && (
         <div style={styles.formCard}>
           <h3>
             {role === "Secretary"
