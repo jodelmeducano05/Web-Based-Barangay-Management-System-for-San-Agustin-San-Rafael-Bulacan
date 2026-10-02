@@ -117,7 +117,9 @@ export default function App() {
     }
 
     setUser(found);
-    setStage("modules");
+    setSelectedModule(`${found.role} Dashboard`);
+    setStage("app");
+    setActivePage("Dashboard");
     showToast(`Welcome ${found.role} - ${found.email}`);
   };
 
@@ -129,7 +131,9 @@ export default function App() {
     };
 
     setUser(googleUser);
-    setStage("modules");
+    setSelectedModule("Resident Dashboard");
+    setStage("app");
+    setActivePage("Dashboard");
     showToast("Welcome Resident!");
   };
 
@@ -167,16 +171,6 @@ export default function App() {
     );
   }
 
-  if (stage === "modules") {
-    return (
-      <DashboardModules
-        onSelect={handleModuleSelect}
-        logout={handleLogout}
-        user={user}
-      />
-    );
-  }
-
   return (
     <>
       {toast && <div style={styles.toast}>{toast}</div>}
@@ -187,7 +181,6 @@ export default function App() {
         activePage={activePage}
         setActivePage={setActivePage}
         logout={handleLogout}
-        backToModules={() => setStage("modules")}
         documents={documents}
         setDocuments={setDocuments}
         announcements={announcements}
@@ -805,7 +798,6 @@ function DashboardLayout({
   activePage,
   setActivePage,
   logout,
-  backToModules,
   documents,
   setDocuments,
   announcements,
@@ -895,16 +887,6 @@ function DashboardLayout({
         </nav>
 
         <div style={styles.sidebarBottom}>
-          <button
-            style={styles.changeModuleButton}
-            onClick={() => {
-              backToModules();
-              showToast("Changed module");
-            }}
-          >
-            Change Module
-          </button>
-
           <button
             style={styles.sidebarLogout}
             onClick={logout}
