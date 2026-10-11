@@ -1445,13 +1445,15 @@ function DocumentsPage({
                     >
                       View
                     </button>
-                    <button
-                      type="button"
-                      style={{ ...styles.viewButton, background: "#dc2626", color: "white", marginLeft: "8px" }}
-                      onClick={() => handleDelete(doc.id)}
-                    >
-                      Delete
-                    </button>
+                    {role !== "Resident" && (
+                      <button
+                        type="button"
+                        style={{ ...styles.viewButton, background: "#dc2626", color: "white", marginLeft: "8px" }}
+                        onClick={() => handleDelete(doc.id)}
+                      >
+                        Delete
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -1804,13 +1806,15 @@ function BlotterReportsPage({
                     >
                       View
                     </button>
-                    <button
-                      type="button"
-                      style={{ ...styles.viewButton, background: "#dc2626", color: "white", marginLeft: "8px" }}
-                      onClick={() => handleDelete(r.id)}
-                    >
-                      Delete
-                    </button>
+                    {role !== "Resident" && (
+                      <button
+                        type="button"
+                        style={{ ...styles.viewButton, background: "#dc2626", color: "white", marginLeft: "8px" }}
+                        onClick={() => handleDelete(r.id)}
+                      >
+                        Delete
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -2116,18 +2120,20 @@ function AnnouncementsPage({
                   Read More →
                 </button>
 
-                <button
-                  type="button"
-                  style={{ ...styles.textButton, color: "#dc2626" }}
-                  onClick={() => {
-                    if (!window.confirm("Are you sure you want to delete this announcement?")) return;
-                    setAnnouncements((current) => current.filter((x) => x.id !== a.id));
-                    setDetail(null);
-                    showToast("Announcement deleted successfully!");
-                  }}
-                >
-                  Delete
-                </button>
+                {canManage && (
+                  <button
+                    type="button"
+                    style={{ ...styles.textButton, color: "#dc2626" }}
+                    onClick={() => {
+                      if (!window.confirm("Are you sure you want to delete this announcement?")) return;
+                      setAnnouncements((current) => current.filter((x) => x.id !== a.id));
+                      setDetail(null);
+                      showToast("Announcement deleted successfully!");
+                    }}
+                  >
+                    Delete
+                  </button>
+                )}
               </div>
             </div>
           </div>
