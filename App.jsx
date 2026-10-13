@@ -42,11 +42,16 @@ export default function App() {
     setPage("Dashboard");
     notify(`Welcome ${found.role}!`);
   };
+  const demoGoogleLogin = () => {
+    setUser({ email: "demo.resident@gmail.com", name: "Google Demo Resident", role: "Resident" });
+    setPage("Dashboard");
+    notify("Welcome Resident! Demo Google login successful.");
+  };
   const logout = () => { setUser(null); setPage("Dashboard"); setToast(""); };
   return (
     <div style={styles.root}>
       {toast && <div style={styles.toast} role="status">{toast}<button style={styles.toastClose} onClick={() => setToast("")}>×</button></div>}
-      {!user ? <Login login={login} users={users} setUsers={setUsers} notify={notify} /> : (
+      {!user ? <Login login={login} demoGoogleLogin={demoGoogleLogin} users={users} setUsers={setUsers} notify={notify} /> : (
         <Layout user={user} page={page} setPage={setPage} logout={logout}>
           {page === "Dashboard" && <Dashboard user={user} setPage={setPage} documents={documents} blotters={blotters} announcements={announcements} />}
           {page === "Documents" && <Documents role={user.role} documents={documents} setDocuments={setDocuments} notify={notify} />}
@@ -58,7 +63,7 @@ export default function App() {
   );
 }
 
-function Login({ login, users, setUsers, notify }) {
+function Login({ login, demoGoogleLogin, users, setUsers, notify }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
@@ -93,7 +98,7 @@ function Login({ login, users, setUsers, notify }) {
           <button style={{ ...styles.primary, width: "100%", background: COLORS.primary, color: "white" }} type="submit">Login</button>
         </form>
         <p style={{ color: "#64748b", margin: "20px 0" }}>OR</p>
-        <button style={{ ...styles.secondary, width: "100%" }} onClick={() => notify("Google login is a demo placeholder. Configure Google OAuth/Firebase to enable it.")}>🌐 Continue as Resident (Google)</button>
+        <button style={{ ...styles.secondary, width: "100%" }} type="button" onClick={demoGoogleLogin}>🌐 Continue as Resident (Google)</button>
         <p style={{ fontSize: 13, marginTop: 22 }}>Don't have an account? <button style={styles.link} onClick={() => setModal("signup")}>Sign Up</button></p>
       </div>
       {modal === "signup" && <Modal title={`Create Account - ${BARANGAY}`} close={() => setModal("")}>
