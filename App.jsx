@@ -257,7 +257,7 @@ const styles = {
   toastClose: { background: "none", border: 0, color: "white", fontSize: 20, cursor: "pointer", marginLeft: 12 },
   loginPage: { minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: 20, boxSizing: "border-box", background: `linear-gradient(135deg, ${COLORS.primary}15, ${COLORS.secondary}30)` },
   loginCard: { background: "white", width: "100%", maxWidth: 430, padding: 35, boxSizing: "border-box", borderRadius: 20, textAlign: "center", boxShadow: "0 15px 45px #0002" },
-  loginLogo: { width: 90, height: 90, objectFit: "cover", borderRadius: "50%", border: `3px solid ${COLORS.secondary}` },
+  loginLogo: { width: 90, height: 90, objectFit: "cover", borderRadius: "50%", border: `3px solid ${COLORS.secondary}`, display: "block", margin: "0 auto 15px auto" },
   label: { display: "block", textAlign: "left", fontSize: 13, fontWeight: 700, margin: "12px 0 7px" },
   input: { width: "100%", boxSizing: "border-box", padding: 12, border: "1px solid #cbd5e1", borderRadius: 8, fontSize: 14, marginBottom: 14, background: "white" },
   textarea: { width: "100%", boxSizing: "border-box", padding: 12, border: "1px solid #cbd5e1", borderRadius: 8, minHeight: 100, resize: "vertical", marginBottom: 14, fontFamily: "inherit" },
