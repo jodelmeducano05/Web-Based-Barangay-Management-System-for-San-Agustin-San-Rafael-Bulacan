@@ -7,6 +7,7 @@ const INITIAL_USERS = [
   { email: "resident@gmail.com", password: "res123", role: "Resident", name: "Resident" },
   { email: "captain@gmail.com", password: "cap123", role: "Captain", name: "Captain" },
   { email: "secretary@gmail.com", password: "sec123", role: "Secretary", name: "Secretary" },
+  { email: "developer@demo.local", password: "devdemo123", role: "Developer", name: "Demo Developer" },
 ];
 const INITIAL_DOCUMENTS = [
   { id: "DOC-001", resident: "Juan Dela Cruz", type: "Barangay Clearance", date: "September 14, 2026", status: "Pending" },
@@ -27,7 +28,11 @@ const today = () => new Date().toLocaleDateString("en-US", { year: "numeric", mo
 const nextId = (items, prefix, digits) => `${prefix}${String(Math.max(0, ...items.map(x => Number(String(x.id).replace(prefix, "")) || 0)) + 1).padStart(digits, "0")}`;
 
 export default function App() {
-  const [users, setUsers] = useState(INITIAL_USERS);
+  const [users, setUsers] = useState(() => {
+    try { const saved = JSON.parse(localStorage.getItem("barangay_demo_users_v2")); return Array.isArray(saved) ? saved : INITIAL_USERS; }
+    catch { return INITIAL_USERS; }
+  });
+  React.useEffect(() => { localStorage.setItem("barangay_demo_users_v2", JSON.stringify(users)); }, [users]);
   const [user, setUser] = useState(null);
   const [page, setPage] = useState("Dashboard");
   const [documents, setDocuments] = useState(INITIAL_DOCUMENTS);
@@ -38,6 +43,8 @@ export default function App() {
   const login = (email, password) => {
     const found = users.find(u => u.email.toLowerCase() === email.trim().toLowerCase() && u.password === password);
     if (!found) return notify("Mali ang email o password!");
+    if (found.status === "Pending") return notify("Pending Developer Approval. Hindi pa puwedeng mag-login.");
+    if (found.status === "Rejected") return notify("Rejected ang account request. Makipag-ugnayan sa developer.");
     setUser(found);
     setPage("Dashboard");
     notify(`Welcome ${found.role}!`);
@@ -53,10 +60,12 @@ export default function App() {
       {toast && <div style={styles.toast} role="status">{toast}<button style={styles.toastClose} onClick={() => setToast("")}>×</button></div>}
       {!user ? <Login login={login} demoGoogleLogin={demoGoogleLogin} users={users} setUsers={setUsers} notify={notify} /> : (
         <Layout user={user} page={page} setPage={setPage} logout={logout}>
+          {user.role === "Developer" ? <DeveloperDashboard users={users} setUsers={setUsers} notify={notify} /> : <>
           {page === "Dashboard" && <Dashboard user={user} setPage={setPage} documents={documents} blotters={blotters} announcements={announcements} />}
           {page === "Documents" && <Documents role={user.role} documents={documents} setDocuments={setDocuments} notify={notify} />}
           {page === "Blotter Reports" && <Blotters role={user.role} blotters={blotters} setBlotters={setBlotters} notify={notify} />}
           {page === "Announcements" && <Announcements role={user.role} announcements={announcements} setAnnouncements={setAnnouncements} notify={notify} />}
+          </>}
         </Layout>
       )}
     </div>
@@ -69,17 +78,18 @@ function Login({ login, demoGoogleLogin, users, setUsers, notify }) {
   const [visible, setVisible] = useState(false);
   const [signupPasswordVisible, setSignupPasswordVisible] = useState(false);
   const [modal, setModal] = useState("");
-  const [signup, setSignup] = useState({ name: "", email: "", password: "" });
+  const [signup, setSignup] = useState({ name: "", email: "", password: "", role: "Resident" });
   const [resetEmail, setResetEmail] = useState("");
   const register = e => {
     e.preventDefault();
     if (!signup.name.trim() || !signup.email.trim() || !signup.password) return notify("Kumpletuhin ang form.");
     if (users.some(u => u.email.toLowerCase() === signup.email.trim().toLowerCase())) return notify("May account na sa email na yan.");
-    setUsers(prev => [...prev, { ...signup, email: signup.email.trim(), role: "Resident" }]);
+    const status = signup.role === "Resident" ? "Approved" : "Pending";
+    setUsers(prev => [...prev, { ...signup, email: signup.email.trim(), status }]);
     setEmail(signup.email.trim());
-    setSignup({ name: "", email: "", password: "" });
+    setSignup({ name: "", email: "", password: "", role: "Resident" });
     setModal("");
-    notify("Resident account created! Maaari ka nang mag-login.");
+    notify(status === "Pending" ? "Request submitted! Hintayin ang Developer Approval." : "Resident account created! Maaari ka nang mag-login.");
   };
   return (
     <div style={styles.loginPage}>
@@ -107,7 +117,11 @@ function Login({ login, demoGoogleLogin, users, setUsers, notify }) {
           <input style={styles.input} placeholder="Full Name" value={signup.name} onChange={e => setSignup({ ...signup, name: e.target.value })} required />
           <input style={styles.input} type="email" placeholder="Email" value={signup.email} onChange={e => setSignup({ ...signup, email: e.target.value })} required />
           <div style={{ ...styles.passwordWrap, marginBottom: 14 }}><input style={{ ...styles.input, marginBottom: 0, paddingRight: 55 }} type={signupPasswordVisible ? "text" : "password"} placeholder="Password" value={signup.password} onChange={e => setSignup({ ...signup, password: e.target.value })} required /><button type="button" style={styles.eye} onClick={() => setSignupPasswordVisible(v => !v)} aria-label={signupPasswordVisible ? "Hide password" : "Show password"}>{signupPasswordVisible ? "🙈" : "👁️"}</button></div>
-          <p style={{ fontSize: 12, color: "#64748b" }}>New accounts are registered as Resident.</p>
+          <label style={styles.label}>Account Role</label>
+          <select style={styles.input} value={signup.role} onChange={e => setSignup({ ...signup, role: e.target.value })}>
+            <option value="Resident">Resident</option><option value="Secretary">Secretary</option><option value="Captain">Captain</option>
+          </select>
+          <p style={{ fontSize: 12, color: "#64748b" }}>{signup.role === "Resident" ? "Resident accounts can log in immediately." : "Requires System Developer approval before login."}</p>
           <div style={styles.actions}><button style={styles.primary} type="submit">Create Account</button><button style={styles.secondary} type="button" onClick={() => setModal("")}>Cancel</button></div>
         </form>
       </Modal>}
@@ -121,7 +135,7 @@ function Login({ login, demoGoogleLogin, users, setUsers, notify }) {
 }
 
 function Layout({ user, page, setPage, logout, children }) {
-  const menu = [{ name: "Dashboard", icon: "🏠" }, { name: "Documents", icon: "📄" }, { name: "Announcements", icon: "📢" }, { name: "Blotter Reports", icon: "📋" }];
+  const menu = user.role === "Developer" ? [{ name: "Dashboard", icon: "🏠" }] : [{ name: "Dashboard", icon: "🏠" }, { name: "Documents", icon: "📄" }, { name: "Announcements", icon: "📢" }, { name: "Blotter Reports", icon: "📋" }];
   return <div style={styles.layout}>
     <aside style={styles.sidebar}>
       <div style={styles.brand}><img src={barangayLogo} alt="Barangay Logo" style={styles.sidebarLogo} /><div><strong>SAN AGUSTIN</strong><p style={{ fontSize: 10, color: COLORS.secondary, margin: "4px 0" }}>{BARANGAY}</p></div></div>
@@ -135,6 +149,27 @@ function Layout({ user, page, setPage, logout, children }) {
       <div style={styles.content}>{children}</div>
     </main>
   </div>;
+}
+
+function DeveloperDashboard({ users, setUsers, notify }) {
+  const requests = users.filter(u => ["Captain", "Secretary"].includes(u.role) && u.status === "Pending");
+  const update = (email, status) => {
+    setUsers(prev => prev.map(u => u.email === email ? { ...u, status } : u));
+    notify(`Account ${status.toLowerCase()}: ${email}`);
+  };
+  return <section style={styles.card}>
+    <h2>Developer Approval Dashboard (Demo)</h2>
+    <p>Captain and Secretary registration requests awaiting approval.</p>
+    {requests.length === 0 ? <p>No pending account requests.</p> : requests.map(u =>
+      <div key={u.email} style={{ padding: 14, borderBottom: "1px solid #ddd" }}>
+        <strong>{u.name}</strong> — {u.role}<p>{u.email}</p>
+        <div style={styles.actions}>
+          <button style={styles.primary} onClick={() => update(u.email, "Approved")}>Approve</button>
+          <button style={styles.delete} onClick={() => update(u.email, "Rejected")}>Reject</button>
+        </div>
+      </div>)}
+    <p style={{ fontSize: 12 }}>Demo only: account data and approval are stored in this browser, not a secure server.</p>
+  </section>;
 }
 
 function Dashboard({ user, setPage, documents, blotters, announcements }) {
