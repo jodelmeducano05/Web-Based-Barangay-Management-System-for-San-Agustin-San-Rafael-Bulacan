@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import barangayLogo from "./barangay-logo.jpg";
-import "./responsive.css";
+
 const BARANGAY = "SAN AGUSTIN, SAN RAFAEL, BULACAN";
 const COLORS = { primary: "#213359", secondary: "#4ADE80" };
 const INITIAL_USERS = [
