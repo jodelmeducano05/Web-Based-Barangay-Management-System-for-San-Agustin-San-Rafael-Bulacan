@@ -1,3 +1,291 @@
+import React, { useState } from "react";
+import barangayLogo from "./barangay-logo.jpg";
+
+const BARANGAY = "SAN AGUSTIN, SAN RAFAEL, BULACAN";
+const COLORS = { primary: "#213359", secondary: "#4ADE80" };
+const INITIAL_USERS = [
+  { email: "resident@gmail.com", password: "res123", role: "Resident", name: "Resident" },
+  { email: "captain@gmail.com", password: "cap123", role: "Captain", name: "Captain" },
+  { email: "secretary@gmail.com", password: "sec123", role: "Secretary", name: "Secretary" },
+  { email: "developer@demo.local", password: "devdemo123", role: "Developer", name: "Demo Developer" },
+];
+const INITIAL_DOCUMENTS = [
+  { id: "DOC-001", resident: "Juan Dela Cruz", type: "Barangay Clearance", date: "September 14, 2026", status: "Pending" },
+  { id: "DOC-002", resident: "Maria Santos", type: "Certificate of Residency", date: "September 13, 2026", status: "Verified" },
+  { id: "DOC-003", resident: "Pedro Reyes", type: "Certificate of Indigency", date: "September 12, 2026", status: "Approved" },
+];
+const INITIAL_BLOTTERS = [
+  { id: "BR-0012", complainant: "Juan Dela Cruz", incident: "Noise Complaint", date: "September 14, 2026", status: "Pending" },
+  { id: "BR-0011", complainant: "Maria Santos", incident: "Dispute", date: "September 13, 2026", status: "Under Review" },
+  { id: "BR-0010", complainant: "Pedro Reyes", incident: "Property Concern", date: "September 12, 2026", status: "Resolved" },
+];
+const INITIAL_ANNOUNCEMENTS = [
+  { id: 1, title: "Barangay General Assembly", date: "September 20, 2026", description: "All residents are invited to attend the barangay general assembly at Brgy Hall of SAN AGUSTIN." },
+  { id: 2, title: "Clean-up Drive", date: "September 22, 2026", description: "Community clean-up drive will be held at the covered court of SAN AGUSTIN." },
+  { id: 3, title: "Health Check-up", date: "September 25, 2026", description: "Free medical check-up for residents of SAN AGUSTIN." },
+];
+const today = () => new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+const nextId = (items, prefix, digits) => `${prefix}${String(Math.max(0, ...items.map(x => Number(String(x.id).replace(prefix, "")) || 0)) + 1).padStart(digits, "0")}`;
+
+export default function App() {
+  const [users, setUsers] = useState(() => {
+    try { const saved = JSON.parse(localStorage.getItem("barangay_demo_users_v2")); return Array.isArray(saved) ? saved : INITIAL_USERS; }
+    catch { return INITIAL_USERS; }
+  });
+  React.useEffect(() => { localStorage.setItem("barangay_demo_users_v2", JSON.stringify(users)); }, [users]);
+  const [user, setUser] = useState(null);
+  const [page, setPage] = useState("Dashboard");
+  const [documents, setDocuments] = useState(INITIAL_DOCUMENTS);
+  const [blotters, setBlotters] = useState(INITIAL_BLOTTERS);
+  const [announcements, setAnnouncements] = useState(INITIAL_ANNOUNCEMENTS);
+  const [toast, setToast] = useState("");
+  const notify = message => { setToast(message); };
+  const login = (email, password) => {
+    const found = users.find(u => u.email.toLowerCase() === email.trim().toLowerCase() && u.password === password);
+    if (!found) return notify("Mali ang email o password!");
+    if (found.status === "Pending") return notify("Pending Developer Approval. Hindi pa puwedeng mag-login.");
+    if (found.status === "Rejected") return notify("Rejected ang account request. Makipag-ugnayan sa developer.");
+    setUser(found);
+    setPage("Dashboard");
+    notify(`Welcome ${found.role}!`);
+  };
+  const demoGoogleLogin = () => {
+    setUser({ email: "demo.resident@gmail.com", name: "Google Demo Resident", role: "Resident" });
+    setPage("Dashboard");
+    notify("Welcome Resident! Demo Google login successful.");
+  };
+  const logout = () => { setUser(null); setPage("Dashboard"); setToast(""); };
+  return (
+    <div className="bms-root" style={styles.root}>
+      <style>{`
+        .bms-root, .bms-root * { box-sizing: border-box; }
+        .bms-root { width: 100%; max-width: 100%; overflow-x: clip; }
+        .bms-root img { max-width: 100%; }
+        .bms-layout { width: 100%; min-width: 0; }
+        .bms-main { min-width: 0; width: 100%; }
+        .bms-content { min-width: 0; width: 100%; }
+        .bms-table-scroll { width: 100%; max-width: 100%; overflow-x: auto; }
+        .bms-table { width: 100%; }
+        .bms-root input, .bms-root select, .bms-root textarea { max-width: 100%; min-width: 0; }
+        .bms-root button { overflow-wrap: anywhere; }
+        @media (max-width: 900px) {
+          .bms-layout { flex-direction: column !important; min-height: 100vh; }
+          .bms-sidebar {
+            width: 100% !important; flex: 0 0 auto !important;
+            padding: 14px !important; border-right: 0 !important;
+            border-bottom: 3px solid ${COLORS.secondary} !important;
+          }
+          .bms-brand { padding-bottom: 12px !important; }
+          .bms-role-box { margin: 12px 0 !important; }
+          .bms-sidebar nav {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+            gap: 6px; width: 100%;
+          }
+          .bms-sidebar nav button { margin: 0 !important; padding: 11px 9px !important; }
+          .bms-sidebar .bms-logout-wrap { margin-top: 12px !important; padding-top: 0 !important; }
+          .bms-topbar { padding: 18px 20px !important; }
+          .bms-content { padding: 20px !important; }
+        }
+        @media (max-width: 600px) {
+          .bms-login-page { padding: 12px !important; align-items: flex-start !important; }
+          .bms-login-card { padding: 22px 16px !important; margin: auto 0; }
+          .bms-login-card h1 { font-size: 21px !important; line-height: 1.3; }
+          .bms-sidebar { padding: 12px !important; }
+          .bms-brand { align-items: flex-start !important; }
+          .bms-brand strong { font-size: 14px; }
+          .bms-brand p { overflow-wrap: anywhere; }
+          .bms-sidebar nav { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+          .bms-topbar { padding: 14px !important; gap: 12px !important; }
+          .bms-topbar h1 { font-size: 20px !important; overflow-wrap: anywhere; }
+          .bms-topbar > div:last-child { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+          .bms-content { padding: 12px !important; }
+          .bms-welcome { padding: 18px !important; }
+          .bms-stats { grid-template-columns: minmax(0, 1fr) !important; gap: 10px !important; }
+          .bms-stat { padding: 14px !important; min-width: 0; }
+          .bms-two-columns { grid-template-columns: minmax(0, 1fr) !important; gap: 12px !important; }
+          .bms-card { padding: 15px !important; border-radius: 11px !important; }
+          .bms-page-header { align-items: stretch !important; }
+          .bms-page-header > button { width: 100%; }
+          .bms-form-card { padding: 16px !important; }
+          .bms-card-header { align-items: stretch !important; }
+          .bms-card-header input { width: 100% !important; max-width: 100% !important; }
+          .bms-table {
+            min-width: 0 !important;
+            width: 100% !important;
+            table-layout: fixed !important;
+            font-size: 10px !important;
+          }
+          .bms-table th, .bms-table td {
+            padding: 4px 2px !important;
+            line-height: 1.4 !important;
+            overflow-wrap: anywhere !important;
+            word-break: break-word !important;
+          }
+          .bms-table button { padding: 5px 6px !important; font-size: 10px !important; }
+          .bms-announcement-grid { grid-template-columns: minmax(0, 1fr) !important; }
+          .bms-announcement { padding: 15px !important; gap: 10px !important; }
+          .bms-modal { padding: 18px !important; }
+          .bms-toast { top: 10px !important; right: 10px !important; left: 10px !important; max-width: none !important; }
+        }
+        @media (max-width: 360px) {
+          .bms-sidebar nav { grid-template-columns: minmax(0, 1fr) !important; }
+          .bms-content { padding: 9px !important; }
+          .bms-stat { gap: 8px !important; }
+        }
+      `}</style>
+      {toast && <div className="bms-toast" style={styles.toast} role="status">{toast}<button style={styles.toastClose} onClick={() => setToast("")}>×</button></div>}
+      {!user ? <Login login={login} demoGoogleLogin={demoGoogleLogin} users={users} setUsers={setUsers} notify={notify} /> : (
+        <Layout user={user} page={page} setPage={setPage} logout={logout}>
+          {user.role === "Developer" ? <DeveloperDashboard users={users} setUsers={setUsers} notify={notify} /> : <>
+          {page === "Dashboard" && <Dashboard user={user} setPage={setPage} documents={documents} blotters={blotters} announcements={announcements} />}
+          {page === "Documents" && <Documents role={user.role} documents={documents} setDocuments={setDocuments} notify={notify} />}
+          {page === "Blotter Reports" && <Blotters role={user.role} blotters={blotters} setBlotters={setBlotters} notify={notify} />}
+          {page === "Announcements" && <Announcements role={user.role} announcements={announcements} setAnnouncements={setAnnouncements} notify={notify} />}
+          </>}
+        </Layout>
+      )}
+    </div>
+  );
+}
+
+function Login({ login, demoGoogleLogin, users, setUsers, notify }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [visible, setVisible] = useState(false);
+  const [signupPasswordVisible, setSignupPasswordVisible] = useState(false);
+  const [modal, setModal] = useState("");
+  const [signup, setSignup] = useState({ name: "", email: "", password: "", role: "Resident" });
+  const [resetEmail, setResetEmail] = useState("");
+  const register = e => {
+    e.preventDefault();
+    if (!signup.name.trim() || !signup.email.trim() || !signup.password) return notify("Kumpletuhin ang form.");
+    if (users.some(u => u.email.toLowerCase() === signup.email.trim().toLowerCase())) return notify("May account na sa email na yan.");
+    const status = signup.role === "Resident" ? "Approved" : "Pending";
+    setUsers(prev => [...prev, { ...signup, email: signup.email.trim(), status }]);
+    setEmail(signup.email.trim());
+    setSignup({ name: "", email: "", password: "", role: "Resident" });
+    setModal("");
+    notify(status === "Pending" ? "Request submitted! Hintayin ang Developer Approval." : "Resident account created! Maaari ka nang mag-login.");
+  };
+  return (
+    <div className="bms-login-page" style={styles.loginPage}>
+      <div className="bms-login-card" style={styles.loginCard}>
+        <img src={barangayLogo} alt="Barangay Logo" style={styles.loginLogo} />
+        <h1 style={{ color: COLORS.primary, fontSize: 24 }}>Barangay Management System</h1>
+        <p style={{ color: COLORS.primary, fontWeight: 700, fontSize: 12 }}>{BARANGAY}</p>
+        <form onSubmit={e => { e.preventDefault(); login(email, password); }}>
+          <label style={styles.label}>Email Address</label>
+          <input style={styles.input} type="email" placeholder="Enter your email" value={email} onChange={e => setEmail(e.target.value)} required />
+          <label style={styles.label}>Password</label>
+          <div style={styles.passwordWrap}>
+            <input style={{ ...styles.input, marginBottom: 0, paddingRight: 55 }} type={visible ? "text" : "password"} placeholder="Enter your password" value={password} onChange={e => setPassword(e.target.value)} required />
+            <button type="button" style={styles.eye} onClick={() => setVisible(v => !v)}>{visible ? "🙈" : "👁️"}</button>
+          </div>
+          <div style={{ textAlign: "right", margin: "12px 0 18px" }}><button type="button" style={styles.link} onClick={() => setModal("forgot")}>Forgot Password?</button></div>
+          <button style={{ ...styles.primary, width: "100%", background: COLORS.primary, color: "white" }} type="submit">Login</button>
+        </form>
+        <p style={{ color: "#64748b", margin: "20px 0" }}>OR</p>
+        <button style={{ ...styles.secondary, width: "100%" }} type="button" onClick={demoGoogleLogin}>🌐 Continue as Resident (Google)</button>
+        <p style={{ fontSize: 13, marginTop: 22 }}>Don't have an account? <button style={styles.link} onClick={() => setModal("signup")}>Sign Up</button></p>
+      </div>
+      {modal === "signup" && <Modal title={`Create Account - ${BARANGAY}`} close={() => setModal("")}>
+        <form onSubmit={register}>
+          <input style={styles.input} placeholder="Full Name" value={signup.name} onChange={e => setSignup({ ...signup, name: e.target.value })} required />
+          <input style={styles.input} type="email" placeholder="Email" value={signup.email} onChange={e => setSignup({ ...signup, email: e.target.value })} required />
+          <div style={{ ...styles.passwordWrap, marginBottom: 14 }}><input style={{ ...styles.input, marginBottom: 0, paddingRight: 55 }} type={signupPasswordVisible ? "text" : "password"} placeholder="Password" value={signup.password} onChange={e => setSignup({ ...signup, password: e.target.value })} required /><button type="button" style={styles.eye} onClick={() => setSignupPasswordVisible(v => !v)} aria-label={signupPasswordVisible ? "Hide password" : "Show password"}>{signupPasswordVisible ? "🙈" : "👁️"}</button></div>
+          <label style={styles.label}>Account Role</label>
+          <select style={styles.input} value={signup.role} onChange={e => setSignup({ ...signup, role: e.target.value })}>
+            <option value="Resident">Resident</option><option value="Secretary">Secretary</option><option value="Captain">Captain</option>
+          </select>
+          <p style={{ fontSize: 12, color: "#64748b" }}>{signup.role === "Resident" ? "Resident accounts can log in immediately." : "Requires System Developer approval before login."}</p>
+          <div style={styles.actions}><button style={styles.primary} type="submit">Create Account</button><button style={styles.secondary} type="button" onClick={() => setModal("")}>Cancel</button></div>
+        </form>
+      </Modal>}
+      {modal === "forgot" && <Modal title="Reset Password" close={() => setModal("")}>
+        <p style={{ color: "#64748b", fontSize: 13 }}>Password reset emails require a backend email service. This demo does not send reset links.</p>
+        <input style={styles.input} type="email" placeholder="your@email.com" value={resetEmail} onChange={e => setResetEmail(e.target.value)} />
+        <div style={styles.actions}><button style={styles.secondary} onClick={() => setModal("")}>Close</button></div>
+      </Modal>}
+    </div>
+  );
+}
+
+function Layout({ user, page, setPage, logout, children }) {
+  const menu = user.role === "Developer" ? [{ name: "Dashboard", icon: "🏠" }] : [{ name: "Dashboard", icon: "🏠" }, { name: "Documents", icon: "📄" }, { name: "Announcements", icon: "📢" }, { name: "Blotter Reports", icon: "📋" }];
+  return <div className="bms-layout" style={styles.layout}>
+    <aside className="bms-sidebar" style={styles.sidebar}>
+      <div className="bms-brand" style={styles.brand}><img src={barangayLogo} alt="Barangay Logo" style={styles.sidebarLogo} /><div><strong>SAN AGUSTIN</strong><p style={{ fontSize: 10, color: COLORS.secondary, margin: "4px 0" }}>{BARANGAY}</p></div></div>
+      <div className="bms-role-box" style={styles.roleBox}><small style={{ color: COLORS.secondary }}>Current Module</small><strong>{user.role} Dashboard</strong><span style={styles.rolePill}>{user.role}</span></div>
+      <p style={{ color: COLORS.secondary, fontSize: 11, paddingLeft: 12 }}>MAIN MENU</p>
+      <nav>{menu.map(m => <button key={m.name} style={{ ...styles.navButton, ...(page === m.name ? styles.navActive : {}) }} onClick={() => setPage(m.name)}>{m.icon}　{m.name}</button>)}</nav>
+      <div className="bms-logout-wrap" style={{ marginTop: "auto", paddingTop: 25 }}><button style={styles.logout} onClick={logout}>Logout</button></div>
+    </aside>
+    <main className="bms-main" style={styles.main}>
+      <header className="bms-topbar" style={styles.topbar}><div><small style={{ color: "#64748b" }}>Home / {page} / {BARANGAY}</small><h1 style={{ color: COLORS.primary, fontSize: 23, margin: "7px 0 0" }}>{page}</h1></div><div style={{ display: "flex", alignItems: "center", gap: 10 }}><span style={styles.avatar}>{user.role.charAt(0)}</span><div><strong>{user.role}</strong><div style={{ color: "#64748b", fontSize: 12 }}>{user.email}</div></div></div></header>
+      <div className="bms-content" style={styles.content}>{children}</div>
+    </main>
+  </div>;
+}
+
+function DeveloperDashboard({ users, setUsers, notify }) {
+  const requests = users.filter(u => ["Captain", "Secretary"].includes(u.role) && u.status === "Pending");
+  const update = (email, status) => {
+    setUsers(prev => prev.map(u => u.email === email ? { ...u, status } : u));
+    notify(`Account ${status.toLowerCase()}: ${email}`);
+  };
+  return <section className="bms-card" style={styles.card}>
+    <h2>Developer Approval Dashboard (Demo)</h2>
+    <p>Captain and Secretary registration requests awaiting approval.</p>
+    {requests.length === 0 ? <p>No pending account requests.</p> : requests.map(u =>
+      <div key={u.email} style={{ padding: 14, borderBottom: "1px solid #ddd" }}>
+        <strong>{u.name}</strong> — {u.role}<p>{u.email}</p>
+        <div style={styles.actions}>
+          <button style={styles.primary} onClick={() => update(u.email, "Approved")}>Approve</button>
+          <button style={styles.delete} onClick={() => update(u.email, "Rejected")}>Reject</button>
+        </div>
+      </div>)}
+    <p style={{ fontSize: 12 }}>Demo only: account data and approval are stored in this browser, not a secure server.</p>
+  </section>;
+}
+
+function Dashboard({ user, setPage, documents, blotters, announcements }) {
+  const stats = [
+    { label: "Document Requests", value: documents.length, icon: "📄", page: "Documents" },
+    { label: "Pending Verification", value: documents.filter(d => d.status === "Pending").length, icon: "⏳", page: "Documents" },
+    { label: "For Captain Approval", value: documents.filter(d => d.status === "Verified").length, icon: "✅", page: "Documents" },
+    { label: "Blotter Reports", value: blotters.length, icon: "📋", page: "Blotter Reports" },
+  ];
+  return <>
+    <div className="bms-welcome" style={styles.welcome}><div><h2>Welcome, {user.role}!</h2><p>{user.role === "Captain" ? "Review and approve requests and reports." : user.role === "Secretary" ? "Verify documents and process blotter reports." : "Request documents and track report status."}<br />You are using <strong>{user.role} Dashboard</strong>.</p></div><span>📅 {today()}</span></div>
+    <div className="bms-stats" style={styles.stats}>{stats.map(s => <button key={s.label} className="bms-stat" style={styles.stat} onClick={() => setPage(s.page)}><span style={{ fontSize: 30 }}>{s.icon}</span><span><small>{s.label}</small><strong style={{ display: "block", fontSize: 27, color: COLORS.primary }}>{s.value}</strong></span></button>)}</div>
+    <div className="bms-two-columns" style={styles.twoColumns}><section className="bms-card" style={styles.card}><h2>Quick Actions - {BARANGAY}</h2><div style={styles.quickActions}><button style={styles.quickButton} onClick={() => setPage("Documents")}>📄 {user.role === "Resident" ? "Request Document" : user.role === "Secretary" ? "Verify Documents" : "Approve Documents"}</button><button style={styles.quickButton} onClick={() => setPage("Blotter Reports")}>📋 {user.role === "Resident" ? "View My Blotter Status" : user.role === "Secretary" ? "Process Blotter Reports" : "Review Blotter Reports"}</button><button style={styles.quickButton} onClick={() => setPage("Announcements")}>📢 View Announcements ({announcements.length})</button></div></section><section className="bms-card" style={styles.card}><h2>Recent Activity</h2><p>📄 Total Document Requests: {documents.length}</p><p>⏳ Pending Documents: {documents.filter(d => d.status === "Pending").length}</p><p>📋 Total Blotter Reports: {blotters.length}</p><p>📢 Announcements: {announcements.length}</p></section></div>
+  </>;
+}
+
+function Documents({ role, documents, setDocuments, notify }) {
+  const [formOpen, setFormOpen] = useState(false);
+  const [form, setForm] = useState({ resident: "", type: "Barangay Clearance", purpose: "" });
+  const [search, setSearch] = useState("");
+  const [detailId, setDetailId] = useState(null);
+  const detail = documents.find(d => d.id === detailId);
+  const submit = e => {
+    e.preventDefault();
+    if (role !== "Resident") return notify("Residents only.");
+    if (!form.resident.trim()) return notify("Enter resident name.");
+    if (!form.purpose.trim()) return notify("Enter purpose of request.");
+    const item = { id: nextId(documents, "DOC-", 3), resident: form.resident.trim(), type: form.type, purpose: form.purpose.trim(), date: today(), status: "Pending" };
+    setDocuments(prev => [item, ...prev]);
+    setForm({ resident: "", type: "Barangay Clearance", purpose: "" }); setFormOpen(false); notify("Request Created - Pending for Secretary");
+  };
+  const updateStatus = (id, status) => {
+    const current = documents.find(d => d.id === id);
+    if (!current) return;
+    if (status === "Verified" && (role !== "Secretary" || current.status !== "Pending")) return notify("Only Secretary can verify pending requests.");
+    if (["Approved", "Rejected"].includes(status) && (role !== "Captain" || current.status !== "Verified")) return notify("Only Captain can approve or reject verified requests.");
+    setDocuments(prev => prev.map(d => d.id === id ? { ...d, status } : d)); notify(`Status: ${status}`);
+  };
+  const remove = id => {
     if (role !== "Resident") return notify("Resident only can delete document requests in this demo.");
     if (!window.confirm("Are you sure you want to delete this document request?")) return;
     setDocuments(prev => prev.filter(d => d.id !== id)); setDetailId(null); notify("Document Request deleted successfully!");
@@ -126,3 +414,5 @@ const styles = {
   notice: { background: "#f1f5f9", padding: 10, borderRadius: 8, fontSize: 12, width: "100%" },
   announcementGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,280px),1fr))", gap: 20 },
   announcement: { background: "white", border: "1px solid #e2e8f0", borderRadius: 14, padding: 22, display: "flex", gap: 15 },
+  announcementIcon: { width: 45, height: 45, borderRadius: 10, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: COLORS.secondary, fontSize: 22 },
+};
